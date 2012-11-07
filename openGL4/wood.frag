@@ -19,11 +19,11 @@ varying vec4 amb;
 // found CG implementation
 //http://http.download.nvidia.com/developer/SDK/Individual_Samples/DEMOS/Direct3D9/src/HLSL_FresnelReflection/docs/FresnelReflection.pdf
 float fresnel(vec3 light, vec3 norm, float var){
-  float cosAngle = 1 - clamp(dot(light, norm), 0.0, 1.0);
+  float cosAngle = 1.0 - clamp(dot(light, norm), 0.0, 1.0);
   float result = cosAngle * cosAngle;
   result = result * result;
   result = result * cosAngle;
-  result = clamp(result * (1 - clamp(var, 0.0, 1.0)) + var, 0.0, 1.0);
+  result = clamp(result * (1.0 - clamp(var, 0.0, 1.0)) + var, 0.0, 1.0);
   return result;
 }
 
@@ -57,7 +57,7 @@ void main(){
   
   
   // calculate refraction & attenuation from the surface coat
-  if(eta != 1.0){
+/*  if(eta != 1.0){
     // need to implement the fresnel function, not sure how...
     // check above
     subSurfaceDir = -normalize(ldir);
@@ -67,7 +67,7 @@ void main(){
     subSurfaceAtt = 1.0;
   }
   normalize(subSurfaceDir);
-  
+*/
   
   
   
