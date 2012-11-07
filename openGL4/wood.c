@@ -21,6 +21,7 @@ int	main_window;
 // shader variables
 GLuint v0, f0, p0;
 GLuint v1, f1, p1;
+GLuint v2, f2, p2;
 
 // camera info
 float eye[3];
@@ -377,6 +378,55 @@ void createShaders(){
   // clear shaders
   glDeleteShader(v1);
   glDeleteShader(f1);
+  
+  //
+  // p2 - wood shader (surface phong shading)
+  //
+  
+  // store file contents
+  char *vs2, *fs2;
+  
+  // initialize shaders
+  v2 = glCreateShader(GL_VERTEX_SHADER);
+  f2 = glCreateShader(GL_FRAGMENT_SHADER);
+  
+  // load shaders from file
+  vs2 = readShader("wood.vert");
+  fs2 = readShader("wood.frag");
+  const char * vv2 = vs2;
+  const char * ff2 = fs2;
+  glShaderSource(v2, 1, &vv2, NULL);
+  glShaderSource(f2, 1, &ff2, NULL);
+  free(vs2);
+  free(fs2);
+  
+  // compile shaders & log errors
+  glCompileShader(v2);
+  glGetShaderiv(v2, GL_COMPILE_STATUS, &Result);
+  glGetShaderiv(v2, GL_INFO_LOG_LENGTH, &InfoLogLength);
+  std::vector<char> VertexShaderErrorMessage2(InfoLogLength);
+  glGetShaderInfoLog(v2, InfoLogLength, NULL, &VertexShaderErrorMessage2[0]);
+  fprintf(stdout, "%s\n", &VertexShaderErrorMessage2[0]);
+  glCompileShader(f2);
+  glGetShaderiv(f2, GL_COMPILE_STATUS, &Result);
+  glGetShaderiv(f2, GL_INFO_LOG_LENGTH, &InfoLogLength);
+  std::vector<char> FragmentShaderErrorMessage2(InfoLogLength);
+  glGetShaderInfoLog(f2, InfoLogLength, NULL, &FragmentShaderErrorMessage2[0]);
+  fprintf(stdout, "%s\n", &FragmentShaderErrorMessage2[0]);
+  
+  // create shader programs & log erfrors
+  p2 = glCreateProgram();
+  glAttachShader(p2, v2);
+  glAttachShader(p2, f2);
+  glLinkProgram(p2);
+  glGetProgramiv(p2, GL_LINK_STATUS, &Result);
+  glGetProgramiv(p2, GL_INFO_LOG_LENGTH, &InfoLogLength);
+  std::vector<char> ProgramErrorMessage2(max(InfoLogLength, int(1)));
+  fprintf(stdout, "%s\n", &ProgramErrorMessage2[0]);
+  
+  // clear shaders
+  glDeleteShader(v2);
+  glDeleteShader(f2);
 }
 
 // set up the scene lighting
@@ -429,7 +479,7 @@ void drawObjects(){
     glMaterialfv(GL_FRONT, GL_SHININESS, silv_shin);
     
     // set shader for wood
-    glUseProgram(p0);
+    glUseProgram(p2);
     
     // draw cube
     glutSolidCube(5);
