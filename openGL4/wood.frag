@@ -11,6 +11,9 @@ varying float ldist;
 varying vec3 p;
 varying vec3 n;
 
+// grab eye vector
+varying vec4 e;
+
 // grab ambient, diffuse lighting terms
 varying vec4 diff;
 varying vec4 amb;
@@ -34,6 +37,12 @@ void main(){
   // default variables for wood shading model
   
   
+  // renormalize for fragment
+  vec3 norm = normalize(n);
+  vec3 l = normalize(ldir);
+  vec3 h = lhalf;
+  vec4 eye = normalize(e);
+  
   // index of refraction for the surface coat (finish), no coat if 0
   float eta = 1.5;
   
@@ -48,8 +57,22 @@ void main(){
   
   // MINV, MAXV, KA, KD, KS, ROUGHNESS???
   
+  // get the forward-facing normal
+  vec3 forwardFacingNormal;
+  if(gl_FrontFacing){
+    forwardFacingNormal = norm;
+  }else{
+    forwardFacingNormal = -norm;
+  }
+  
+  // define a local XYZ coordinate system
+  // Z: out from surface, X: along fiber grain
+  vec3 localZ = forwardFacingNormal;
+  vec3 localX = -normalize(fiber);
+  vec3 localY = cross(localZ, localX);
+  
   // final color to output
-  vec4 c;
+  vec4 c = vec4(0.0, 0.0, 0.0, 0.0);
   
   
   
@@ -57,31 +80,72 @@ void main(){
   
   
   // calculate refraction & attenuation from the surface coat
-/*  if(eta != 1.0){
-    // need to implement the fresnel function, not sure how...
-    // check above
-    subSurfaceDir = -normalize(ldir);
-    subSurfaceAtt = 1.0;
+  vec3 subSurfaceDir;
+  float subSurfaceAtten;
+  float subSurfaceFresnel;
+  if(eta != 1.0){
+    // need to implement the fresnel function
+    // made a guess, not sure if correct...
+    float r0 = (1.0 - eta) * (1.0 - eta) / (1.0 + eta) / (1.0 + eta);
+    subSurfaceDir = -l;
+    float attFactor = fresnel(subSurfaceDir, forwardFacingNormal, r0);
+    subSurfaceAtten = 1.0 - attFactor;
   }else{
-    subSurfaceDir = -normalize(ldir);
-    subSurfaceAtt = 1.0;
+    subSurfaceDir = -l;
+    subSurfaceAtten = 1.0;
   }
-  normalize(subSurfaceDir);
-*/
+  subSurfaceDir = normalize(subSurfaceDir);
+
+  // load default parameters (not form texture maps yet)
+  vec3 diffuse, highlight, axis;
+  //diffuse = ???;
+  highlight = fiberC;
+  axis = fiber.x * localX + fiber.y * localY + fiber.z * localZ;
+  axis = normalize(axis);
+  
+  // get the anisotropic highlight
+  
+  // refract at the smooth surface
+  vec3 subSurfaceDirIn;
+  float subSurfaceAttenOut;
+  if(eta != 1.0){
+    float etaInv = 1.0 / eta;
+    float r0 = (1.0 - etaInv) * (1.0 - etaInv) / (1.0 + etaInv) / (1.0 + etaInv);
+    float attFactor = fresnel(subSurfaceDir, localZ, r0);
+    subSurfaceAttenOut = 1.0 - attFactor;
+  }else{
+    subSurfaceDirIn = -l;
+    subSurfaceAttenOut = 1.0;
+  }
+  
+  // this is a guess, for a dot product.... not sure EXACTLY renderman works...
+  
+  // get a factor for rendering specular highlight
+  float subSurfaceFactor = max(0, dot(-subSurfaceDirIn, localZ)) * subSurfaceAtten * subSurfaceAttenOut;
+  
+  // calculate the angles for incidence & reflection & for the Gaussian model
+  float psiR = asin(dot(subSurfaceDir, axis));
+  float psiI = asin(dot(subSurfaceDirIn, axis));
+  float psiD = psiR - psiI;
+  float psiH = psiR + psiI;
+  
+  // use a Gaussian to model the specular reflection as a cone (spread out)
+  float sqrt2pi = 2.5066283;
+  float fiberFactor = beta * exp(-pow(psiH / beta, 2) / 2.0) / sqrt2pi;
+  
+  // add a geometric factor to the fiber factor for Gaussian specular reflection spread
+  float cosI = cos(psiD / 2.0);
+  float geoFactor = 1.0 / pow(cosI, 2);
+  fiberFactor *= geoFactor;
+  
+  // need to implement the color now!
   
   
   
+  // add global ambient to color
+  c += amb;
   
   
-  
-  
-  // set color to the global ambient
-  c = amb;
-  
-  // renormalize for fragment
-  vec3 norm = normalize(n);
-  vec3 l = normalize(ldir);
-  vec3 h = lhalf;
   
   // sets the diffuse darkness (dot product betwee normal and light)
   float dotProd = max(dot(norm, l), 0.0);

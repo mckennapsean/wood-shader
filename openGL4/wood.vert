@@ -10,6 +10,9 @@ varying float ldist;
 varying vec3 p;
 varying vec3 n;
 
+// store eye vector
+varying vec4 e;
+
 // store ambient and diffuse lighting terms
 varying vec4 diff;
 varying vec4 amb;
@@ -31,6 +34,9 @@ void main(){
   vec3 aux = vec3(gl_LightSource[0].position - vPos);
   ldir = normalize(aux);
   ldist = length(aux);
+  
+  // pass in eye vector
+  normalize(-vPos);
   
   // calculate the light half vector
   lhalf = normalize(gl_LightSource[0].halfVector.xyz);
