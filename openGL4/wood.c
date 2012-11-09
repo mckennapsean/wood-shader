@@ -483,7 +483,7 @@ void drawObjects(){
     
     // draw cube
     glutSolidCube(5);
-        
+    
     // clean-up
     glUseProgram(p0);
     glPopMatrix();

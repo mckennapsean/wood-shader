@@ -55,7 +55,10 @@ void main(){
   // directional color along the wood fiber
   vec3 fiberC = vec3(1.0, 0.6, 0.4);
   
-  // MINV, MAXV, KA, KD, KS, ROUGHNESS???
+  // roughness factor (for specular highlight)
+  float roughness = 0.2;
+  
+  // MINV, MAXV, KA, KD, KS????
   
   // get the forward-facing normal
   vec3 forwardFacingNormal;
@@ -74,6 +77,9 @@ void main(){
   // final color to output
   vec4 c = vec4(0.0, 0.0, 0.0, 0.0);
   
+  // add global ambient to color
+  c += amb;
+  
   
   
   // begin shading model
@@ -87,19 +93,20 @@ void main(){
     // need to implement the fresnel function
     // made a guess, not sure if correct...
     float r0 = (1.0 - eta) * (1.0 - eta) / (1.0 + eta) / (1.0 + eta);
-    subSurfaceDir = -l;
-    float attFactor = fresnel(subSurfaceDir, forwardFacingNormal, r0);
+    subSurfaceDir = -eye.xyz;
+    float attFactor = fresnel(-subSurfaceDir, forwardFacingNormal, r0);
     subSurfaceAtten = 1.0 - attFactor;
   }else{
-    subSurfaceDir = -l;
+    subSurfaceDir = -eye.xyz;
     subSurfaceAtten = 1.0;
   }
   subSurfaceDir = normalize(subSurfaceDir);
 
   // load default parameters (not form texture maps yet)
-  vec3 diffuse, highlight, axis;
+  vec4 highlight;
   //diffuse = ???;
-  highlight = fiberC;
+  highlight = vec4(fiberC.x, fiberC.y, fiberC.z, 1.0);
+  vec3 axis;
   axis = fiber.x * localX + fiber.y * localY + fiber.z * localZ;
   axis = normalize(axis);
   
@@ -138,13 +145,22 @@ void main(){
   float geoFactor = 1.0 / pow(cosI, 2);
   fiberFactor *= geoFactor;
   
-  // need to implement the color now!
+  // skip diffuse highlight for now...?
+  // MISSING some weird Cl term...
+  
+  // add in fiber highlight (attenuated)
+  c += fiberFactor * subSurfaceFactor * highlight;
+  
+  // calculate strength of surface highlight
+  vec3 vec = normalize(l - eye.xyz);
+  float etaInv = 1.0 / eta;
+  float r0 = (1.0 - etaInv) * (1.0 - etaInv) / (1.0 + etaInv) / (1.0 + etaInv);
+  float specFactor = fresnel(eye.xyz, vec, r0);
+  c += specFactor * pow(max(0, dot(vec, localZ)), 1.0 / roughness);
   
   
   
-  // add global ambient to color
-  c += amb;
-  
+  // back to regular Phong shading
   
   
   // sets the diffuse darkness (dot product betwee normal and light)
