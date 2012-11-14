@@ -23,10 +23,11 @@ varying vec4 amb;
 //http://http.download.nvidia.com/developer/SDK/Individual_Samples/DEMOS/Direct3D9/src/HLSL_FresnelReflection/docs/FresnelReflection.pdf
 float fresnel(vec3 light, vec3 norm, float var){
   float cosAngle = 1.0 - clamp(dot(light, norm), 0.0, 1.0);
-  float result = cosAngle * cosAngle;
-  result = result * result;
-  result = result * cosAngle;
-  result = clamp(result * (1.0 - clamp(var, 0.0, 1.0)) + var, 0.0, 1.0);
+  float partial0 = cosAngle * cosAngle;
+  float partial1 = partial0 * partial0;
+  float partial2 = partial1 * cosAngle;
+  float partial3 = partial2 * (1.0 - clamp(var, 0.0, 1.0)) + var;
+  float result = clamp(partial3, 0.0, 1.0);
   return result;
 }
 
