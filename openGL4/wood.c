@@ -23,6 +23,12 @@ GLuint v0, f0, p0;
 GLuint v1, f1, p1;
 GLuint v2, f2, p2;
 
+// swap between wood and non-wood shader
+bool wood = true;
+
+// whether to debug shaders or not
+bool debug = false;
+
 // camera info
 float eye[3];
 float lookat[3];
@@ -228,6 +234,19 @@ void myGlutMotion(int x, int y){
 // when a keyboard action is performed
 void myGlutKeyboard(unsigned char key, int x, int y){
   switch(key){
+    
+    // toggle wood shader
+    case 'w':
+    case 'W':
+      if(wood){
+        wood = false;
+        cout<<"Wood shader deactivated"<<endl;
+      }else{
+        wood = true;
+        cout<<"Wood shader activated"<<endl;
+      }
+      break;
+    
   // quit
   case 27:
   case 'q':
@@ -308,13 +327,15 @@ void createShaders(){
   glGetShaderiv(v0, GL_INFO_LOG_LENGTH, &InfoLogLength);
   std::vector<char> VertexShaderErrorMessage0(InfoLogLength);
   glGetShaderInfoLog(v0, InfoLogLength, NULL, &VertexShaderErrorMessage0[0]);
-  fprintf(stdout, "%s\n", &VertexShaderErrorMessage0[0]);
+  if(debug)
+    fprintf(stdout, "%s\n", &VertexShaderErrorMessage0[0]);
   glCompileShader(f0);
   glGetShaderiv(f0, GL_COMPILE_STATUS, &Result);
   glGetShaderiv(f0, GL_INFO_LOG_LENGTH, &InfoLogLength);
   std::vector<char> FragmentShaderErrorMessage0(InfoLogLength);
   glGetShaderInfoLog(f0, InfoLogLength, NULL, &FragmentShaderErrorMessage0[0]);
-  fprintf(stdout, "%s\n", &FragmentShaderErrorMessage0[0]);
+  if(debug)
+    fprintf(stdout, "%s\n", &FragmentShaderErrorMessage0[0]);
   
   // create shader programs & log errors
   p0 = glCreateProgram();
@@ -324,7 +345,8 @@ void createShaders(){
   glGetProgramiv(p0, GL_LINK_STATUS, &Result);
   glGetProgramiv(p0, GL_INFO_LOG_LENGTH, &InfoLogLength);
   std::vector<char> ProgramErrorMessage0(max(InfoLogLength, int(1)));
-  fprintf(stdout, "%s\n", &ProgramErrorMessage0[0]);
+  if(debug)
+    fprintf(stdout, "%s\n", &ProgramErrorMessage0[0]);
   
   // clear shaders
   glDeleteShader(v0);
@@ -357,13 +379,15 @@ void createShaders(){
   glGetShaderiv(v1, GL_INFO_LOG_LENGTH, &InfoLogLength);
   std::vector<char> VertexShaderErrorMessage1(InfoLogLength);
   glGetShaderInfoLog(v1, InfoLogLength, NULL, &VertexShaderErrorMessage1[0]);
-  fprintf(stdout, "%s\n", &VertexShaderErrorMessage1[0]);
+  if(debug)
+    fprintf(stdout, "%s\n", &VertexShaderErrorMessage1[0]);
   glCompileShader(f1);
   glGetShaderiv(f1, GL_COMPILE_STATUS, &Result);
   glGetShaderiv(f1, GL_INFO_LOG_LENGTH, &InfoLogLength);
   std::vector<char> FragmentShaderErrorMessage1(InfoLogLength);
   glGetShaderInfoLog(f1, InfoLogLength, NULL, &FragmentShaderErrorMessage1[0]);
-  fprintf(stdout, "%s\n", &FragmentShaderErrorMessage1[0]);
+  if(debug)
+    fprintf(stdout, "%s\n", &FragmentShaderErrorMessage1[0]);
   
   // create shader programs & log erfrors
   p1 = glCreateProgram();
@@ -373,7 +397,8 @@ void createShaders(){
   glGetProgramiv(p1, GL_LINK_STATUS, &Result);
   glGetProgramiv(p1, GL_INFO_LOG_LENGTH, &InfoLogLength);
   std::vector<char> ProgramErrorMessage1(max(InfoLogLength, int(1)));
-  fprintf(stdout, "%s\n", &ProgramErrorMessage1[0]);
+  if(debug)
+    fprintf(stdout, "%s\n", &ProgramErrorMessage1[0]);
   
   // clear shaders
   glDeleteShader(v1);
@@ -406,13 +431,15 @@ void createShaders(){
   glGetShaderiv(v2, GL_INFO_LOG_LENGTH, &InfoLogLength);
   std::vector<char> VertexShaderErrorMessage2(InfoLogLength);
   glGetShaderInfoLog(v2, InfoLogLength, NULL, &VertexShaderErrorMessage2[0]);
-  fprintf(stdout, "%s\n", &VertexShaderErrorMessage2[0]);
+  if(debug)
+    fprintf(stdout, "%s\n", &VertexShaderErrorMessage2[0]);
   glCompileShader(f2);
   glGetShaderiv(f2, GL_COMPILE_STATUS, &Result);
   glGetShaderiv(f2, GL_INFO_LOG_LENGTH, &InfoLogLength);
   std::vector<char> FragmentShaderErrorMessage2(InfoLogLength);
   glGetShaderInfoLog(f2, InfoLogLength, NULL, &FragmentShaderErrorMessage2[0]);
-  fprintf(stdout, "%s\n", &FragmentShaderErrorMessage2[0]);
+  if(debug)
+    fprintf(stdout, "%s\n", &FragmentShaderErrorMessage2[0]);
   
   // create shader programs & log erfrors
   p2 = glCreateProgram();
@@ -422,7 +449,8 @@ void createShaders(){
   glGetProgramiv(p2, GL_LINK_STATUS, &Result);
   glGetProgramiv(p2, GL_INFO_LOG_LENGTH, &InfoLogLength);
   std::vector<char> ProgramErrorMessage2(max(InfoLogLength, int(1)));
-  fprintf(stdout, "%s\n", &ProgramErrorMessage2[0]);
+  if(debug)
+    fprintf(stdout, "%s\n", &ProgramErrorMessage2[0]);
   
   // clear shaders
   glDeleteShader(v2);
@@ -478,11 +506,18 @@ void drawObjects(){
     glMaterialfv(GL_FRONT, GL_SPECULAR, silv_spec);
     glMaterialfv(GL_FRONT, GL_SHININESS, silv_shin);
     
-    // set shader for wood
-    glUseProgram(p2);
+    // set shader for wood, if active
+    if(wood)
+      glUseProgram(p2);
+    else
+      glUseProgram(p0);
     
     // draw cube
     glutSolidCube(5);
+    
+    // draw teapot
+    glTranslatef(0, 7, 0);
+    glutSolidTeapot(2.0);
     
     // clean-up
     glUseProgram(p0);
