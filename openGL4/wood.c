@@ -22,6 +22,7 @@ int	main_window;
 GLuint v0, f0, p0;
 GLuint v1, f1, p1;
 GLuint v2, f2, p2;
+GLuint p1t;
 
 // swap between wood and non-wood shader
 bool wood = true;
@@ -400,6 +401,9 @@ void createShaders(){
   if(debug)
     fprintf(stdout, "%s\n", &ProgramErrorMessage1[0]);
   
+  // add program variable
+  p1t = glGetUniformLocation(p1, "tex");
+  
   // clear shaders
   glDeleteShader(v1);
   glDeleteShader(f1);
@@ -543,6 +547,7 @@ void drawFloor(){
   
   // activate texture shader
   glUseProgram(p1);
+  glUniform1i(p1t, 0);
   
   // draw the floor with textures (mip-mapped checkerboard)
   glBegin(GL_TRIANGLE_FAN);
