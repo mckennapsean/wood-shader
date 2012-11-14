@@ -31,6 +31,7 @@ void main(){
   
   // light position for vertex
   vec4 vPos = gl_ModelViewMatrix * gl_Vertex;
+  e = vPos;
   vec3 aux = vec3(gl_LightSource[0].position - vPos);
   ldir = normalize(aux);
   ldist = length(aux);
