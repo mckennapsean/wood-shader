@@ -27,7 +27,7 @@ GLuint v2, f2, p2;
 bool wood = true;
 
 // whether to debug shaders or not
-bool debug = false;
+bool debug = true;
 
 // camera info
 float eye[3];
@@ -516,8 +516,8 @@ void drawObjects(){
     glutSolidCube(5);
     
     // draw teapot
-    glTranslatef(0, 7, 0);
-    glutSolidTeapot(2.0);
+    glTranslatef(0, 5, 0);
+    glutSolidTeapot(3.0);
     
     // clean-up
     glUseProgram(p0);

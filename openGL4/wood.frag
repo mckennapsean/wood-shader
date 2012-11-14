@@ -89,11 +89,11 @@ void main(){
   vec3 subSurfaceDir;
   float subSurfaceAtten;
   float subSurfaceFresnel;
+  
   if(eta != 1.0){
     // need to implement the fresnel function
     // made a guess, not sure if correct...
     float r0 = (1.0 - eta) * (1.0 - eta) / (1.0 + eta) / (1.0 + eta);
-    subSurfaceDir = -eye.xyz;
     float attFactor = fresnel(-subSurfaceDir, forwardFacingNormal, r0);
     subSurfaceAtten = 1.0 - attFactor;
   }else{
@@ -101,7 +101,7 @@ void main(){
     subSurfaceAtten = 1.0;
   }
   subSurfaceDir = normalize(subSurfaceDir);
-
+  
   // load default parameters (not form texture maps yet)
   vec4 highlight;
   //diffuse = ???;
