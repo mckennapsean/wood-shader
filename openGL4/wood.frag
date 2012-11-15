@@ -18,6 +18,9 @@ varying vec4 e;
 varying vec4 diff;
 varying vec4 amb;
 
+// from main program, light intensity
+uniform float intensity;
+
 // fresnel calculation
 // found CG implementation
 //http://http.download.nvidia.com/developer/SDK/Individual_Samples/DEMOS/Direct3D9/src/HLSL_FresnelReflection/docs/FresnelReflection.pdf
@@ -142,10 +145,10 @@ void main(){
   float fiberFactor = fiberFactorInitial * geoFactor;
   
   // add in surface diffuse term (attenuated)
-  c += subSurfaceFactor * diff;
+  c += subSurfaceFactor * diff * intensity;
   
   // add in fiber highlight (attenuated)
-  c += fiberFactor * subSurfaceFactor * highlight;
+  c += fiberFactor * subSurfaceFactor * highlight * intensity;
   
   // calculate strength of surface highlight
   vec3 vec = normalize(l - eye.xyz);
@@ -154,7 +157,7 @@ void main(){
   float specFactor = fresnel(eye.xyz, vec, r0);
   
   // add in surface highlight
-  c += specFactor * pow(max(0, dot(vec, localZ)), 1.0 / roughness) * highlight;
+  c += specFactor * pow(max(0, dot(vec, localZ)), 1.0 / roughness) * highlight * intensity;
   
   // set the output color
   gl_FragColor = c;

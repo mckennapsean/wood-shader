@@ -22,7 +22,8 @@ int	main_window;
 GLuint v0, f0, p0;
 GLuint v1, f1, p1;
 GLuint v2, f2, p2;
-GLuint p1t;
+GLuint v3, f3, p3;
+GLuint p1t, p2t, p3t;
 
 // swap between wood and non-wood shader
 bool wood = true;
@@ -456,9 +457,64 @@ void createShaders(){
   if(debug)
     fprintf(stdout, "%s\n", &ProgramErrorMessage2[0]);
   
+  // add program variable
+  p2t = glGetUniformLocation(p2, "intensity");
+  
   // clear shaders
   glDeleteShader(v2);
   glDeleteShader(f2);
+  
+  //
+  // p3 - light model shader
+  //
+  
+  // store file contents
+  char *vs3, *fs3;
+  
+  // initialize shaders
+  v3 = glCreateShader(GL_VERTEX_SHADER);
+  f3 = glCreateShader(GL_FRAGMENT_SHADER);
+  
+  // load shaders from file
+  vs3 = readShader("light.vert");
+  fs3 = readShader("light.frag");
+  const char * vv3 = vs3;
+  const char * ff3 = fs3;
+  glShaderSource(v3, 1, &vv3, NULL);
+  glShaderSource(f3, 1, &ff3, NULL);
+  free(vs3);
+  free(fs3);
+  
+  // compile shaders & log errors
+  glCompileShader(v3);
+  glGetShaderiv(v3, GL_COMPILE_STATUS, &Result);
+  glGetShaderiv(v3, GL_INFO_LOG_LENGTH, &InfoLogLength);
+  std::vector<char> VertexShaderErrorMessage3(InfoLogLength);
+  glGetShaderInfoLog(v3, InfoLogLength, NULL, &VertexShaderErrorMessage3[0]);
+  fprintf(stdout, "%s\n", &VertexShaderErrorMessage3[0]);
+  glCompileShader(f3);
+  glGetShaderiv(f3, GL_COMPILE_STATUS, &Result);
+  glGetShaderiv(f3, GL_INFO_LOG_LENGTH, &InfoLogLength);
+  std::vector<char> FragmentShaderErrorMessage3(InfoLogLength);
+  glGetShaderInfoLog(f3, InfoLogLength, NULL, &FragmentShaderErrorMessage3[0]);
+  fprintf(stdout, "%s\n", &FragmentShaderErrorMessage3[0]);
+  
+  // create shader programs & log errors
+  p3 = glCreateProgram();
+  glAttachShader(p3, v3);
+  glAttachShader(p3, f3);
+  glLinkProgram(p3);
+  glGetProgramiv(p3, GL_LINK_STATUS, &Result);
+  glGetProgramiv(p3, GL_INFO_LOG_LENGTH, &InfoLogLength);
+  std::vector<char> ProgramErrorMessage3(max(InfoLogLength, int(1)));
+  fprintf(stdout, "%s\n", &ProgramErrorMessage3[0]);
+  
+  // add program variable
+  p3t = glGetUniformLocation(p3, "intensity");
+  
+  // clear shaders
+  glDeleteShader(v3);
+  glDeleteShader(f3);
 }
 
 // set up the scene lighting
@@ -476,7 +532,8 @@ void lightScene(void){
   GLfloat emission[] = {1.0, 1.0, 1.0, 1.0};
   GLfloat noEmission[] = {0.0, 0.0, 0.0, 1.0};
   glMaterialfv(GL_FRONT, GL_EMISSION, emission);
-  glUseProgram(p0);
+  glUseProgram(p3);
+  glUniform1f(p3t, live_light_intensity);
   glutSolidSphere(0.3, 64, 64);
   glUseProgram(p0);
   glMaterialfv(GL_FRONT, GL_EMISSION, noEmission);
@@ -507,13 +564,15 @@ void drawObjects(){
     glMaterialfv(GL_FRONT, GL_DIFFUSE, wood_diff);
     
     // set shader for wood, if active
-    if(wood)
+    if(wood){
       glUseProgram(p2);
-    else
+      glUniform1f(p2t, live_light_intensity);
+    }else{
       glUseProgram(p0);
+    }
     
     // draw wooden thin slab
-    glTranslatef(0, 1, 0);
+    glTranslatef(0, 0.2, 0);
     glBegin(GL_TRIANGLE_FAN);
       glNormal3f(0.0, -1.0, 0.0);
       glVertex3f(-7, 0, -7);
@@ -521,13 +580,6 @@ void drawObjects(){
       glVertex3f( 7, 0, 7);
       glVertex3f(-7, 0, 7);
     glEnd();
-    
-    // draw cube
-    //glutSolidCube(5);
-    
-    // draw sphere
-    //glTranslatef(0, 5, 0);
-    //glutSolidSphere(3.0, 256, 256);
     
     // clean-up
     glUseProgram(p0);
@@ -733,9 +785,9 @@ int main(int argc, char* argv[]){
   live_object_xz_trans[0] = 0;
   live_object_xz_trans[1] = 0;
   live_object_y_trans = 0;
-  live_light_xz_trans[0] = 0;
-  live_light_xz_trans[1] = 0;
-  live_light_y_trans = 19;
+  live_light_xz_trans[0] = 7;
+  live_light_xz_trans[1] = 7;
+  live_light_y_trans = 13;
   live_draw_floor = 1;
   live_draw_walls = 1;
   live_draw_object = 1;
