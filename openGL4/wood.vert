@@ -31,15 +31,14 @@ void main(){
   // normal for vertex, in eye coords
   n = normalize(gl_NormalMatrix * gl_Normal);
   
-  // light position for vertex
+  // eye position
   vec4 vPos = gl_ModelViewMatrix * gl_Vertex;
-  e = vPos;
+  e = normalize(vPos);
+  
+  // light position
   vec3 aux = vec3(gl_LightSource[0].position - vPos);
   ldir = normalize(aux);
   ldist = length(aux);
-  
-  // pass in eye vector
-  normalize(-vPos);
   
   // calculate the light half vector
   lhalf = normalize(gl_LightSource[0].halfVector.xyz);
