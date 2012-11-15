@@ -141,7 +141,7 @@ void main(){
   
   // use a Gaussian to model the specular reflection as a cone (spread out)
   float sqrt2pi = 2.5066283;
-  float fiberFactorInitial = beta * exp(-pow(psiH / beta, 2) / 2.0) / sqrt2pi;
+  float fiberFactorInitial = exp(-pow(psiH / beta, 2) / 2.0) / sqrt2pi / beta;
   
   // add a geometric factor to the fiber factor for Gaussian specular reflection spread
   float cosI = cos(psiD / 2.0);
