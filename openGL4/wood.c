@@ -560,8 +560,10 @@ void drawObjects(){
     // polished silver metallic
     GLfloat wood_amb[] = {0.17969, 0.09375, 0.00150, 1.0};
     GLfloat wood_diff[] = {0.4375, 0.21875, 0.00391, 1.0};
+    GLfloat wood_spec[] = {0.9975, 0.68875, 0.12391, 1.0};
     glMaterialfv(GL_FRONT, GL_AMBIENT, wood_amb);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, wood_diff);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, wood_spec);
     
     // set shader for wood, if active
     if(wood){

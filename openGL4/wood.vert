@@ -13,15 +13,17 @@ varying vec3 n;
 // store eye vector
 varying vec4 e;
 
-// store ambient and diffuse lighting terms
+// store ambient and diffuse and specular lighting terms
 varying vec4 diff;
 varying vec4 amb;
+varying vec4 spec;
 
 void main(){
   // calculate ambient and diffuse lighting
   amb = gl_FrontMaterial.ambient * gl_LightSource[0].ambient;
   amb += gl_LightModel.ambient *  gl_FrontMaterial.ambient;
   diff = gl_FrontMaterial.diffuse * gl_LightSource[0].diffuse;
+  spec = gl_FrontMaterial.specular * gl_LightSource[0].specular;
   
   // vertex position
   p = gl_Vertex.xyz;

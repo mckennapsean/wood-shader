@@ -17,6 +17,7 @@ varying vec4 e;
 // grab ambient, diffuse lighting terms
 varying vec4 diff;
 varying vec4 amb;
+varying vec4 spec;
 
 // from main program, light intensity
 uniform float intensity;
@@ -148,7 +149,7 @@ void main(){
   c += subSurfaceFactor * diff * intensity;
   
   // add in fiber highlight (attenuated)
-  c += fiberFactor * subSurfaceFactor * highlight * intensity;
+  c += fiberFactor * subSurfaceFactor * spec * intensity;
   
   // calculate strength of surface highlight
   vec3 vec = normalize(l - eye.xyz);
@@ -157,7 +158,7 @@ void main(){
   float specFactor = fresnel(eye.xyz, vec, r0);
   
   // add in surface highlight
-  c += specFactor * pow(max(0, dot(vec, localZ)), 1.0 / roughness) * highlight * intensity;
+  c += specFactor * pow(max(0, dot(vec, localZ)), 1.0 / roughness) * spec * intensity;
   
   // set the output color
   gl_FragColor = c;
