@@ -19,9 +19,9 @@ varying vec4 amb;
 
 void main(){
   // calculate ambient and diffuse lighting
-  amb = gl_LightSource[0].ambient;
-  amb += gl_LightModel.ambient;
-  diff = gl_LightSource[0].diffuse;
+  amb = gl_FrontMaterial.ambient * gl_LightSource[0].ambient;
+  amb += gl_LightModel.ambient *  gl_FrontMaterial.ambient;
+  diff = gl_FrontMaterial.diffuse * gl_LightSource[0].diffuse;
   
   // vertex position
   p = gl_Vertex.xyz;

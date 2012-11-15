@@ -501,14 +501,10 @@ void drawObjects(){
     glMultMatrixf(live_object_rotation);
     
     // polished silver metallic
-    GLfloat silv_amb[] = {0.23125, 0.23125, 0.23125, 1.0};
-    GLfloat silv_diff[] = {0.2775, 0.2775, 0.2775, 1.0};
-    GLfloat silv_spec[] = {0.773911, 0.773911, 0.773911, 1.0};
-    GLfloat silv_shin[] = {89.6};
-    glMaterialfv(GL_FRONT, GL_AMBIENT, silv_amb);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, silv_diff);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, silv_spec);
-    glMaterialfv(GL_FRONT, GL_SHININESS, silv_shin);
+    GLfloat wood_amb[] = {0.17969, 0.09375, 0.00150, 1.0};
+    GLfloat wood_diff[] = {0.4375, 0.21875, 0.00391, 1.0};
+    glMaterialfv(GL_FRONT, GL_AMBIENT, wood_amb);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, wood_diff);
     
     // set shader for wood, if active
     if(wood)
@@ -519,11 +515,9 @@ void drawObjects(){
     // draw cube
     glutSolidCube(5);
     
-    // draw teapot
+    // draw sphere
     glTranslatef(0, 5, 0);
-    glFrontFace(GL_CW);
-    glutSolidTeapot(3.0);
-    glFrontFace(GL_CCW);
+    glutSolidSphere(3.0, 256, 256);
     
     // clean-up
     glUseProgram(p0);
