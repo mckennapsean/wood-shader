@@ -512,12 +512,22 @@ void drawObjects(){
     else
       glUseProgram(p0);
     
+    // draw wooden thin slab
+    glTranslatef(0, 1, 0);
+    glBegin(GL_TRIANGLE_FAN);
+      glNormal3f(0.0, -1.0, 0.0);
+      glVertex3f(-7, 0, -7);
+      glVertex3f( 7, 0, -7);
+      glVertex3f( 7, 0, 7);
+      glVertex3f(-7, 0, 7);
+    glEnd();
+    
     // draw cube
-    glutSolidCube(5);
+    //glutSolidCube(5);
     
     // draw sphere
-    glTranslatef(0, 5, 0);
-    glutSolidSphere(3.0, 256, 256);
+    //glTranslatef(0, 5, 0);
+    //glutSolidSphere(3.0, 256, 256);
     
     // clean-up
     glUseProgram(p0);
