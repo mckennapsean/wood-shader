@@ -41,7 +41,7 @@ void main(){
   // renormalize for fragment
   vec3 norm = normalize(n);
   vec3 l = normalize(ldir);
-  vec3 h = lhalf;
+  vec3 h = normalize(lhalf);
   vec4 eye = normalize(e);
   
   // index of refraction for the surface coat (finish), no coat if 0
@@ -59,8 +59,6 @@ void main(){
   // roughness factor (for specular highlight)
   float roughness = 0.2;
   
-  // MINV, MAXV, KA, KD, KS????
-  
   // get the forward-facing normal
   vec3 forwardFacingNormal;
   if(gl_FrontFacing){
@@ -73,18 +71,13 @@ void main(){
   // Z: out from surface, X: along fiber grain
   vec3 localZ = forwardFacingNormal;
   vec3 localX = -normalize(fiber);
-  vec3 localY = cross(localZ, localX);
+  vec3 localY = cross(-localZ, localX);
   
   // final color to output
   vec4 c = vec4(0.0, 0.0, 0.0, 0.0);
-  vec4 c0 = vec4(0.0, 0.0, 0.0, 0.0);
-  vec4 c1 = vec4(0.0, 0.0, 0.0, 0.0);
-  vec4 c2 = vec4(0.0, 0.0, 0.0, 0.0);
-  vec4 c3 = vec4(0.0, 0.0, 0.0, 0.0);
-  vec4 c4 = vec4(0.0, 0.0, 0.0, 0.0);
   
   // add global ambient to color
-  c0 += amb;
+  c += amb;
   
   
   
@@ -143,43 +136,26 @@ void main(){
   float sqrt2pi = 2.5066283;
   float fiberFactorInitial = exp(-pow(psiH / beta, 2) / 2.0) / sqrt2pi / beta;
   
-  // add a geometric factor to the fiber factor for Gaussian specular reflection spread
+  // create a geometric factor to the fiber factor for Gaussian specular reflection spread
   float cosI = cos(psiD / 2.0);
   float geoFactor = 1.0 / pow(cosI, 2);
   float fiberFactor = fiberFactorInitial * geoFactor;
   
-  // skip diffuse highlight for now...?
-  // MISSING some weird Cl term...
+  // add in surface diffuse term (attenuated)
+  c += subSurfaceFactor * diff;
   
   // add in fiber highlight (attenuated)
-  c1 += fiberFactor * subSurfaceFactor * highlight;
+  c += fiberFactor * subSurfaceFactor * highlight;
   
   // calculate strength of surface highlight
   vec3 vec = normalize(l - eye.xyz);
   float etaInv = 1.0 / eta;
   float r0 = (1.0 - etaInv) * (1.0 - etaInv) / (1.0 + etaInv) / (1.0 + etaInv);
   float specFactor = fresnel(eye.xyz, vec, r0);
-  c2 += specFactor * pow(max(0, dot(vec, localZ)), 1.0 / roughness);
   
-  
-  
-  // back to regular Phong shading
-  
-  
-  // sets the diffuse darkness (dot product betwee normal and light)
-  float dotProd = max(dot(norm, l), 0.0);
-
-  // add diffuse & specular highlights if bright
-  if(dotProd > 0.0){
-    // calculate attenuation
-    float att = 1.0 / (gl_LightSource[0].constantAttenuation + gl_LightSource[0].linearAttenuation * ldist + gl_LightSource[0].quadraticAttenuation * ldist * ldist);
-    
-    // calculate diffuse and specular brightness
-    c3 += att * (diff * dotProd);
-    c4 += att * gl_FrontMaterial.specular * gl_LightSource[0].specular * pow(max(dot(norm, h), 0.0), gl_FrontMaterial.shininess);
-  }
+  // add in surface highlight
+  c += specFactor * pow(max(0, dot(vec, localZ)), 1.0 / roughness) * highlight;
   
   // set the output color
-  c += c0 + c1 + c2 + c3 + c4;
   gl_FragColor = c;
 }

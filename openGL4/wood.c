@@ -521,7 +521,9 @@ void drawObjects(){
     
     // draw teapot
     glTranslatef(0, 5, 0);
+    glFrontFace(GL_CW);
     glutSolidTeapot(3.0);
+    glFrontFace(GL_CCW);
     
     // clean-up
     glUseProgram(p0);
