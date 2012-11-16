@@ -9,6 +9,8 @@
   wood.cpp has been written by Sean McKenna to implement <a href="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html">a realistic wood shading model BRDF</a> (bidirectional reflectance distribution function).
 </p>
 
+<img src="img/wood0.png" />
+
 <p>
   The GUI is the basic window and environment used in all other assignments for this course. The object is a simple, thin "slab" of wood, currently just a plain-brown-colored surface. The object and light can both be moved.
 </p>
@@ -24,6 +26,8 @@
 <p>
   All the shader code matches what has been presented in Section 4 of the paper, the "Shading Model for Wood." This specifically applies to finished wood, where light refracts and reflects off the coated surface and inside of the surface as well. Those two pieces (surface & sub-surface) are the fundamental components of the BRDF.
 </p>
+
+<img src="img/wood1.png" />
 
 <p>
   Interestingly, the implementation of the shader used for the paper renderings was "wrong." I emailed the first author on the paper (Dr. Marschner at Cornell University), and pointed out an error in a piece of code they had used for the normalized Gaussian distribution. He stated in his email that the only real resulting difference was a change in one of the other variables for generating the highlighted surface, but nonetheless, I have fixed this normalized Gaussian distribution in my shader implementation.
