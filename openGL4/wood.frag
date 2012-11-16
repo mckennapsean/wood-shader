@@ -57,11 +57,8 @@ void main(){
   // width of sub-surface highlight (along a cone)
   float beta = 0.1745;
   
-  // directional color along the wood fiber
-  vec3 fiberC = vec3(1.0, 0.6, 0.4);
-  
-  // roughness factor (for specular highlight)
-  float roughness = 0.2;
+  // roughness factor (for specular highlight, originally 0.2)
+  float roughness = 0.03;
   
   // get the forward-facing normal
   vec3 forwardFacingNormal;
@@ -89,23 +86,19 @@ void main(){
   
   
   // calculate refraction & attenuation from the surface coat
-  vec3 subSurfaceDir = -eye.xyz;
+  vec3 subSurfaceDir = -normalize(eye.xyz);
   float subSurfaceAtten;
-  float subSurfaceFresnel;
   if(eta != 1.0){
-    // need to implement the fresnel function
-    // made a guess, not sure if correct...
+    // fresnel function, implementation above
     float r0 = (1.0 - eta) * (1.0 - eta) / (1.0 + eta) / (1.0 + eta);
     float attFactor = fresnel(-subSurfaceDir, forwardFacingNormal, r0);
     subSurfaceAtten = 1.0 - attFactor;
   }else{
     subSurfaceAtten = 1.0;
   }
-  subSurfaceDir = normalize(subSurfaceDir);
   
-  // load default parameters (not form texture maps yet)
-  vec4 highlight = vec4(fiberC.x, fiberC.y, fiberC.z, 1.0);
-  //diffuse = ???;
+  // load default parameters (not from texture maps yet)
+  // colors from GL material
   vec3 axis;
   axis = fiber.x * localX + fiber.y * localY + fiber.z * localZ;
   axis = normalize(axis);
@@ -113,22 +106,19 @@ void main(){
   // get the anisotropic highlight
   
   // refract at the smooth surface
-  vec3 subSurfaceDirIn;
-  float subSurfaceAttenOut;
+  vec3 subSurfaceDirIn = -l;
+  float subSurfaceAttenIn;
   if(eta != 1.0){
     float etaInv = 1.0 / eta;
     float r0 = (1.0 - etaInv) * (1.0 - etaInv) / (1.0 + etaInv) / (1.0 + etaInv);
-    float attFactor = fresnel(subSurfaceDir, localZ, r0);
-    subSurfaceAttenOut = 1.0 - attFactor;
+    float attFactor = fresnel(subSurfaceDirIn, localZ, r0);
+    subSurfaceAttenIn = 1.0 - attFactor;
   }else{
-    subSurfaceDirIn = -l;
-    subSurfaceAttenOut = 1.0;
+    subSurfaceAttenIn = 1.0;
   }
   
-  // this is a guess, for a dot product.... not sure EXACTLY renderman works...
-  
-  // get a factor for rendering specular highlight
-  float subSurfaceFactor = max(0, dot(-subSurfaceDirIn, localZ)) * subSurfaceAtten * subSurfaceAttenOut;
+  // get a factor for rendering specular highlight (Phong-style calculation)
+  float subSurfaceFactor = max(0, dot(-subSurfaceDirIn, localZ)) * subSurfaceAtten * subSurfaceAttenIn;
   
   // calculate the angles for incidence & reflection & for the Gaussian model
   float psiR = asin(dot(subSurfaceDir, axis));
@@ -145,7 +135,7 @@ void main(){
   float geoFactor = 1.0 / pow(cosI, 2);
   float fiberFactor = fiberFactorInitial * geoFactor;
   
-  // add in surface diffuse term (attenuated)
+  // add in diffuse term (attenuated)
   c += subSurfaceFactor * diff * intensity;
   
   // add in fiber highlight (attenuated)
@@ -157,7 +147,7 @@ void main(){
   float r0 = (1.0 - etaInv) * (1.0 - etaInv) / (1.0 + etaInv) / (1.0 + etaInv);
   float specFactor = fresnel(eye.xyz, vec, r0);
   
-  // add in surface highlight
+  // add in surface highlight (Phong-style highlight)
   c += specFactor * pow(max(0, dot(vec, localZ)), 1.0 / roughness) * spec * intensity;
   
   // set the output color

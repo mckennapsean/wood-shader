@@ -558,7 +558,7 @@ void drawObjects(){
     glMultMatrixf(live_object_rotation);
     
     // polished silver metallic
-    GLfloat wood_amb[] = {0.17969, 0.09375, 0.00150, 1.0};
+    GLfloat wood_amb[] = {0.27969, 0.14375, 0.00250, 1.0};
     GLfloat wood_diff[] = {0.4375, 0.21875, 0.00391, 1.0};
     GLfloat wood_spec[] = {0.9975, 0.68875, 0.12391, 1.0};
     glMaterialfv(GL_FRONT, GL_AMBIENT, wood_amb);
@@ -839,9 +839,9 @@ int main(int argc, char* argv[]){
   glui->set_main_gfx_window(main_window);
   
   // initialize the camera
-  eye[0] = 0;
-  eye[1] = 4;
-  eye[2] = 15;
+  eye[0] = -3;
+  eye[1] = 13;
+  eye[2] = 7;
   lookat[0] = 0;
   lookat[1] = 0;
   lookat[2] = 0;
