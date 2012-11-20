@@ -51,14 +51,13 @@ void main(){
   vec3 h = normalize(lhalf);
   vec4 eye = normalize(e);
   
-  // grab texture color
-  vec4 texCol = texture2D(tex, gl_TexCoord[0].st);
+  // direction of the wood fibers, from texture
+  vec4 fiberTex = texture2D(tex, gl_TexCoord[0].st) * 2.0 - 1.0;
+  vec3 fiber = fiberTex.xyz;
+  normalize(fiber);
   
   // index of refraction for the surface coat (finish), no coat if 0
-  float eta = 1.5;
-  
-  // direction of the wood fibers
-  vec3 fiber = vec3(1.0, 0.0, 0.0);
+  float eta = 1.5;  
   
   // width of sub-surface highlight (along a cone)
   float beta = 0.1745;
@@ -105,8 +104,7 @@ void main(){
   
   // load default parameters (not from texture maps yet)
   // colors from GL material
-  vec3 axis;
-  axis = fiber.x * localX + fiber.y * localY + fiber.z * localZ;
+  vec3 axis = fiber.x * localX + fiber.y * localY + fiber.z * localZ;
   axis = normalize(axis);
   
   // get the anisotropic highlight
@@ -157,7 +155,7 @@ void main(){
   c += specFactor * pow(max(0, dot(vec, localZ)), 1.0 / roughness) * spec * intensity;
   
   // add in texture color (may need to adjust)
-  c += texCol;
+  //c += texCol;
   
   // set the output color
   gl_FragColor = c;
