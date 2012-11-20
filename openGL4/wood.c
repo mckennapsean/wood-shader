@@ -23,7 +23,7 @@ GLuint v0, f0, p0;
 GLuint v1, f1, p1;
 GLuint v2, f2, p2;
 GLuint v3, f3, p3;
-GLuint p1t, p2t, p2t2, p3t;
+GLuint p1t, p2t, p2t2, p2t3, p2t4, p3t;
 
 // swap between wood and non-wood shader
 bool wood = true;
@@ -460,6 +460,8 @@ void createShaders(){
   // add program variable
   p2t = glGetUniformLocation(p2, "intensity");
   p2t2 = glGetUniformLocation(p2, "tex");
+  p2t3 = glGetUniformLocation(p2, "texFiber");
+  p2t4 = glGetUniformLocation(p2, "texHighlight");
   
   // clear shaders
   glDeleteShader(v2);
@@ -571,8 +573,11 @@ void drawObjects(){
       glUseProgram(p2);
       glUniform1f(p2t, live_light_intensity);
       glUniform1i(p2t2, 1);
+      glUniform1i(p2t3, 2);
       glActiveTexture(GL_TEXTURE1);
       glBindTexture(GL_TEXTURE_2D, 1);
+      glActiveTexture(GL_TEXTURE2);
+      glBindTexture(GL_TEXTURE_2D, 2);
     }else{
       glUseProgram(p0);
     }
@@ -582,12 +587,16 @@ void drawObjects(){
     glBegin(GL_TRIANGLE_FAN);
       glNormal3f(0.0, -1.0, 0.0);
       glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 0.0);
+      glMultiTexCoord2fARB(GL_TEXTURE2, 0.0, 0.0);
       glVertex3f(-7, 0, -7);
       glMultiTexCoord2fARB(GL_TEXTURE1, 1.0, 0.0);
+      glMultiTexCoord2fARB(GL_TEXTURE2, 1.0, 0.0);
       glVertex3f( 7, 0, -7);
       glMultiTexCoord2fARB(GL_TEXTURE1, 1.0, 1.0);
+      glMultiTexCoord2fARB(GL_TEXTURE2, 1.0, 1.0);
       glVertex3f( 7, 0, 7);
       glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 1.0);
+      glMultiTexCoord2fARB(GL_TEXTURE2, 0.0, 1.0);
       glVertex3f(-7, 0, 7);
     glEnd();
     
@@ -762,8 +771,17 @@ void init(void){
   free(image);
   
   // import image of wood for textures
-  image = read_texture("tex/wood.rgb", &width, &height, &components);
+  image = read_texture("tex/maple.rgb", &width, &height, &components);
   glBindTexture(GL_TEXTURE_2D, 1);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  free(image);
+  
+  // import image of wood for textures
+  image = read_texture("tex/wood.rgb", &width, &height, &components);
+  glBindTexture(GL_TEXTURE_2D, 2);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);

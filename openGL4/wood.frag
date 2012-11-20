@@ -22,8 +22,10 @@ varying vec4 spec;
 // from main program, light intensity
 uniform float intensity;
 
-// from main program, grab the input texture
+// from main program, grab the input textures
 uniform sampler2D tex;
+uniform sampler2D texFiber;
+//uniform sampler2D texHighlight;
 
 // fresnel calculation
 // found CG implementation
@@ -52,7 +54,7 @@ void main(){
   vec4 eye = normalize(e);
   
   // direction of the wood fibers, from texture
-  vec4 fiberTex = texture2D(tex, gl_TexCoord[0].st) * 2.0 - 1.0;
+  vec4 fiberTex = texture2D(texFiber, gl_TexCoord[0].st) * 2.0 - 1.0;
   vec3 fiber = fiberTex.xyz;
   normalize(fiber);
   
@@ -83,7 +85,9 @@ void main(){
   vec4 c = vec4(0.0, 0.0, 0.0, 0.0);
   
   // add global ambient to color
-  c += amb;
+  // add in texture color (may need to adjust)
+  vec4 texCol = texture2D(tex, gl_TexCoord[0].st);
+  c += amb * texCol;
   
   
   
@@ -140,7 +144,7 @@ void main(){
   float fiberFactor = fiberFactorInitial * geoFactor;
   
   // add in diffuse term (attenuated)
-  c += subSurfaceFactor * diff * intensity;
+  c += subSurfaceFactor * diff * texCol * intensity;
   
   // add in fiber highlight (attenuated)
   c += fiberFactor * subSurfaceFactor * spec * intensity;
@@ -153,9 +157,6 @@ void main(){
   
   // add in surface highlight (Phong-style highlight)
   c += specFactor * pow(max(0, dot(vec, localZ)), 1.0 / roughness) * spec * intensity;
-  
-  // add in texture color (may need to adjust)
-  //c += texCol;
   
   // set the output color
   gl_FragColor = c;
