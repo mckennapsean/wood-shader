@@ -22,6 +22,9 @@ varying vec4 spec;
 // from main program, light intensity
 uniform float intensity;
 
+// from main program, grab the input texture
+uniform sampler2D tex;
+
 // fresnel calculation
 // found CG implementation
 //http://http.download.nvidia.com/developer/SDK/Individual_Samples/DEMOS/Direct3D9/src/HLSL_FresnelReflection/docs/FresnelReflection.pdf
@@ -47,6 +50,9 @@ void main(){
   vec3 l = normalize(ldir);
   vec3 h = normalize(lhalf);
   vec4 eye = normalize(e);
+  
+  // grab texture color
+  vec4 texCol = texture2D(tex, gl_TexCoord[0].st);
   
   // index of refraction for the surface coat (finish), no coat if 0
   float eta = 1.5;
@@ -149,6 +155,9 @@ void main(){
   
   // add in surface highlight (Phong-style highlight)
   c += specFactor * pow(max(0, dot(vec, localZ)), 1.0 / roughness) * spec * intensity;
+  
+  // add in texture color (may need to adjust)
+  c += texCol;
   
   // set the output color
   gl_FragColor = c;

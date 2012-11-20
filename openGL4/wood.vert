@@ -19,6 +19,9 @@ varying vec4 amb;
 varying vec4 spec;
 
 void main(){
+  // set the texture coordinate
+  gl_TexCoord[0] = gl_MultiTexCoord1;
+  
   // calculate ambient and diffuse lighting
   amb = gl_FrontMaterial.ambient * gl_LightSource[0].ambient;
   amb += gl_LightModel.ambient *  gl_FrontMaterial.ambient;
