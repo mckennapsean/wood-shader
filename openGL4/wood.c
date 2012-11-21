@@ -3,6 +3,13 @@
 //
 // renders a wood shading model using shaders
 
+// need to implement:
+// manual selection of wood type
+// implement all wood types simultaneously
+// GUI for wood type selection
+// GUI for rotation options (none, object, viewer, camera)
+// GUI for algorithm vars
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
