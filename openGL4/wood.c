@@ -31,6 +31,9 @@ bool wood = true;
 // whether to debug shaders or not
 bool debug = true;
 
+// track wood object rotation
+double rotation = 0.0;
+
 // camera info
 float eye[3];
 float lookat[3];
@@ -560,6 +563,12 @@ void drawObjects(){
     glTranslatef(live_object_xz_trans[0], live_object_y_trans, -live_object_xz_trans[1]);
     glMultMatrixf(live_object_rotation);
     
+    // rotate around the y-axis & increment appropriately
+    glRotatef(rotation, 0.0, -1.0, 0.0);
+    rotation += 0.4;
+    if(rotation >= 360.0)
+      rotation = 0.0;
+    
     // background wood color
     GLfloat wood_amb[] = {0.27969, 0.14375, 0.00250, 1.0};
     GLfloat wood_diff[] = {0.4375, 0.21875, 0.00391, 1.0};
@@ -649,9 +658,9 @@ void drawWalls(void){
   glCullFace(GL_FRONT);
   
   // make walls light-blue
-  GLfloat blue_amb[] = {0.02, 0.11, 0.23, 1.0};
-  GLfloat blue_diff[] = {0.05, 0.23, 0.49, 1.0};
-  GLfloat blue_spec[] = {0.11, 0.49, 1.00, 1.0};
+  GLfloat blue_amb[] = {0.13, 0.11, 0.23, 1.0};
+  GLfloat blue_diff[] = {0.24, 0.23, 0.49, 1.0};
+  GLfloat blue_spec[] = {0.33, 0.49, 1.00, 1.0};
   GLfloat blue_shin[] = {30.0};
   glMaterialfv(GL_FRONT, GL_AMBIENT, blue_amb);
   glMaterialfv(GL_FRONT, GL_DIFFUSE, blue_diff);
