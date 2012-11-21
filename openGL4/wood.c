@@ -567,7 +567,7 @@ void drawObjects(){
     glRotatef(rotation, 0.0, -1.0, 0.0);
     rotation += 0.4;
     if(rotation >= 360.0)
-      rotation = 0.0;
+      rotation -= 360.0;
     
     // background wood color
     GLfloat wood_amb[] = {0.27969, 0.14375, 0.00250, 1.0};
