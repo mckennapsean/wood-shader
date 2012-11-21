@@ -34,6 +34,10 @@ bool debug = true;
 // track wood object rotation
 double rotation = 0.0;
 
+// store which wood type to load
+// 1 for maple, 4 for paduak, 7 for walnut1, 10 for walnut2, 0 for all
+int woodType = 1;
+
 // camera info
 float eye[3];
 float lookat[3];
@@ -581,15 +585,15 @@ void drawObjects(){
     if(wood){
       glUseProgram(p2);
       glUniform1f(p2t, live_light_intensity);
-      glUniform1i(p2t2, 1);
-      glUniform1i(p2t3, 2);
-      glUniform1i(p2t4, 3);
+      glUniform1i(p2t2, woodType);
+      glUniform1i(p2t3, woodType + 1);
+      glUniform1i(p2t4, woodType + 2);
       glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, 1);
+      glBindTexture(GL_TEXTURE_2D, woodType);
       glActiveTexture(GL_TEXTURE2);
-      glBindTexture(GL_TEXTURE_2D, 2);
+      glBindTexture(GL_TEXTURE_2D, woodType + 1);
       glActiveTexture(GL_TEXTURE3);
-      glBindTexture(GL_TEXTURE_2D, 3);
+      glBindTexture(GL_TEXTURE_2D, woodType + 2);
     }else{
       glUseProgram(p0);
     }
@@ -799,6 +803,33 @@ void init(void){
   // import maple wood fiber texture
   image = read_texture("tex/mapleFiber.rgb", &width, &height, &components);
   glBindTexture(GL_TEXTURE_2D, 3);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  free(image);
+  
+  // import maple wood image
+  image = read_texture("tex/padauk.rgb", &width, &height, &components);
+  glBindTexture(GL_TEXTURE_2D, 4);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  free(image);
+  
+  // import maple wood highlight image
+  image = read_texture("tex/padaukHighlight.rgb", &width, &height, &components);
+  glBindTexture(GL_TEXTURE_2D, 5);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  free(image);
+  
+  // import maple wood fiber texture
+  image = read_texture("tex/padaukFiber.rgb", &width, &height, &components);
+  glBindTexture(GL_TEXTURE_2D, 6);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
