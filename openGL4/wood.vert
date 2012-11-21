@@ -24,10 +24,8 @@ void main(){
   
   // calculate ambient and diffuse lighting
   amb = gl_LightSource[0].ambient + gl_LightModel.ambient;
-  //amb = gl_FrontMaterial.ambient * gl_LightSource[0].ambient;
-  //amb += gl_LightModel.ambient *  gl_FrontMaterial.ambient;
   diff = gl_FrontMaterial.diffuse * gl_LightSource[0].diffuse;
-  spec = gl_FrontMaterial.specular * gl_LightSource[0].specular;
+  spec = gl_LightSource[0].specular;
   
   // vertex position
   p = gl_Vertex.xyz;

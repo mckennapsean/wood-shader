@@ -24,8 +24,8 @@ uniform float intensity;
 
 // from main program, grab the input textures
 uniform sampler2D tex;
+uniform sampler2D texHighlight;
 uniform sampler2D texFiber;
-//uniform sampler2D texHighlight;
 
 // fresnel calculation
 // found CG implementation
@@ -52,6 +52,10 @@ void main(){
   vec3 l = normalize(ldir);
   vec3 h = normalize(lhalf);
   vec4 eye = normalize(e);
+  
+  // grab diffuse & highlight image textures
+  vec4 texCol = texture2D(tex, gl_TexCoord[0].st);
+  vec4 texSpec = texture2D(texHighlight, gl_TexCoord[0].st) * 20.0;
   
   // direction of the wood fibers, from texture
   vec4 fiberTex = texture2D(texFiber, gl_TexCoord[0].st) * 2.0 - 1.0;
@@ -84,10 +88,8 @@ void main(){
   // final color to output
   vec4 c = vec4(0.0, 0.0, 0.0, 0.0);
   
-  // add global ambient to color
-  // add in texture color (may need to adjust)
-  vec4 texCol = texture2D(tex, gl_TexCoord[0].st);
-  c += amb * texCol;
+  // add global ambient to color with diffuse wood image
+  c += amb * texCol * intensity;
   
   
   
@@ -100,7 +102,7 @@ void main(){
   if(eta != 1.0){
     // fresnel function, implementation above
     float r0 = (1.0 - eta) * (1.0 - eta) / (1.0 + eta) / (1.0 + eta);
-    float attFactor = fresnel(-subSurfaceDir, forwardFacingNormal, r0);
+    float attFactor = fresnel(subSurfaceDir, forwardFacingNormal, r0);
     subSurfaceAtten = 1.0 - attFactor;
   }else{
     subSurfaceAtten = 1.0;
@@ -119,7 +121,7 @@ void main(){
   if(eta != 1.0){
     float etaInv = 1.0 / eta;
     float r0 = (1.0 - etaInv) * (1.0 - etaInv) / (1.0 + etaInv) / (1.0 + etaInv);
-    float attFactor = fresnel(subSurfaceDirIn, localZ, r0);
+    float attFactor = fresnel(-subSurfaceDirIn, localZ, r0);
     subSurfaceAttenIn = 1.0 - attFactor;
   }else{
     subSurfaceAttenIn = 1.0;
@@ -147,7 +149,7 @@ void main(){
   c += subSurfaceFactor * diff * texCol * intensity;
   
   // add in fiber highlight (attenuated)
-  c += fiberFactor * subSurfaceFactor * spec * intensity;
+  c += fiberFactor * subSurfaceFactor * spec * texSpec * intensity;
   
   // calculate strength of surface highlight
   vec3 vec = normalize(l - eye.xyz);
