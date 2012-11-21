@@ -1,6 +1,6 @@
 // by Sean McKenna
-// followed the paper, referenced in readme
-// reference for fresnel function: http://code.google.com/p/glslang-library/ ???
+// followed the paper, referenced in writeup
+// reference for fresnel function below
 
 // grab lighting vars
 varying vec3 ldir;
@@ -35,7 +35,7 @@ float fresnel(vec3 light, vec3 norm, float var){
   float result = cosAngle * cosAngle;
   result *= result;
   result *= cosAngle;
-  result *= (1.0 - clamp(var, 0.0, 1.0)) + var;
+  result = result * (1.0 - clamp(var, 0.0, 1.0)) + var;
   result = clamp(result, 0.0, 1.0);
   return result;
 }
@@ -55,7 +55,7 @@ void main(){
   
   // grab diffuse & highlight image textures
   vec4 texCol = texture2D(tex, gl_TexCoord[0].st);
-  vec4 texSpec = texture2D(texHighlight, gl_TexCoord[0].st) * 20.0;
+  vec4 texSpec = texture2D(texHighlight, gl_TexCoord[0].st) * 10.0;
   
   // direction of the wood fibers, from texture
   vec4 fiberTex = texture2D(texFiber, gl_TexCoord[0].st) * 2.0 - 1.0;
@@ -63,13 +63,18 @@ void main(){
   normalize(fiber);
   
   // index of refraction for the surface coat (finish), no coat if 0
-  float eta = 1.5;  
+  float eta = 1.50;
+  
+  // adjusted index of refraction for small viewing angles...
+  // I needed to adjust this to avoid distortions at certain angles, for consistency
+  float etaAdj = 1.01;
+  float etaAdjInv = 1.0 / etaAdj;
   
   // width of sub-surface highlight (along a cone)
   float beta = 0.1745;
   
   // roughness factor (for specular highlight, originally 0.2)
-  float roughness = 0.03;
+  float roughness = 0.20;
   
   // get the forward-facing normal
   vec3 forwardFacingNormal;
@@ -97,19 +102,19 @@ void main(){
   
   
   // calculate refraction & attenuation from the surface coat
-  vec3 subSurfaceDir = -normalize(eye.xyz);
+  vec3 subSurfaceDir = -eye.xyz;
   float subSurfaceAtten;
   if(eta != 1.0){
     // fresnel function, implementation above
     float r0 = (1.0 - eta) * (1.0 - eta) / (1.0 + eta) / (1.0 + eta);
-    float attFactor = fresnel(subSurfaceDir, forwardFacingNormal, r0);
+    float attFactor = fresnel(-eye.xyz, forwardFacingNormal, r0);
+    subSurfaceDir = -refract(-eye.xyz, forwardFacingNormal, etaAdj);
     subSurfaceAtten = 1.0 - attFactor;
   }else{
     subSurfaceAtten = 1.0;
   }
   
-  // load default parameters (not from texture maps yet)
-  // colors from GL material
+  // load default parameters for the local fiber axis
   vec3 axis = fiber.x * localX + fiber.y * localY + fiber.z * localZ;
   axis = normalize(axis);
   
@@ -121,14 +126,15 @@ void main(){
   if(eta != 1.0){
     float etaInv = 1.0 / eta;
     float r0 = (1.0 - etaInv) * (1.0 - etaInv) / (1.0 + etaInv) / (1.0 + etaInv);
-    float attFactor = fresnel(-subSurfaceDirIn, localZ, r0);
+    float attFactor = fresnel(l, localZ, r0);
+    subSurfaceDirIn = refract(-l, localZ, etaAdjInv);
     subSurfaceAttenIn = 1.0 - attFactor;
   }else{
     subSurfaceAttenIn = 1.0;
   }
   
   // get a factor for rendering specular highlight (Phong-style calculation)
-  float subSurfaceFactor = max(0, dot(-subSurfaceDirIn, localZ)) * subSurfaceAtten * subSurfaceAttenIn;
+  float subSurfaceFactor = max(0, -dot(subSurfaceDirIn, localZ)) * subSurfaceAtten * subSurfaceAttenIn;
   
   // calculate the angles for incidence & reflection & for the Gaussian model
   float psiR = asin(dot(subSurfaceDir, axis));

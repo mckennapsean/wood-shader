@@ -560,7 +560,7 @@ void drawObjects(){
     glTranslatef(live_object_xz_trans[0], live_object_y_trans, -live_object_xz_trans[1]);
     glMultMatrixf(live_object_rotation);
     
-    // polished silver metallic
+    // background wood color
     GLfloat wood_amb[] = {0.27969, 0.14375, 0.00250, 1.0};
     GLfloat wood_diff[] = {0.4375, 0.21875, 0.00391, 1.0};
     GLfloat wood_spec[] = {0.9975, 0.68875, 0.12391, 1.0};

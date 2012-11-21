@@ -1,5 +1,5 @@
 // by Sean McKenna
-// followed the paper, referenced in readme
+// followed the paper, referenced in writeup
 
 // store lighting vars
 varying vec3 ldir;
