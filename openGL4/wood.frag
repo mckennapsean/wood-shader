@@ -27,6 +27,17 @@ uniform sampler2D tex;
 uniform sampler2D texHighlight;
 uniform sampler2D texFiber;
 
+// BRDF controls, passed from main program
+
+// index of refraction for the surface coat (finish), no coat if 0
+uniform float eta;
+
+// width of sub-surface highlight (along a cone)
+uniform float beta;
+
+// roughness factor (for specular highlight, originally 0.2)
+uniform float roughness;
+
 // fresnel calculation
 // found CG implementation
 //http://http.download.nvidia.com/developer/SDK/Individual_Samples/DEMOS/Direct3D9/src/HLSL_FresnelReflection/docs/FresnelReflection.pdf
@@ -62,19 +73,13 @@ void main(){
   vec3 fiber = fiberTex.xyz;
   normalize(fiber);
   
-  // index of refraction for the surface coat (finish), no coat if 0
-  float eta = 1.50;
+  // index of refraction, width of sub-surface highlight, &
+  // roughness factor, all set and passed from the GUI
   
   // adjusted index of refraction for small viewing angles...
   // I needed to adjust this to avoid distortions at certain angles, for consistency
   float etaAdj = 1.01;
   float etaAdjInv = 1.0 / etaAdj;
-  
-  // width of sub-surface highlight (along a cone)
-  float beta = 0.1745;
-  
-  // roughness factor (for specular highlight, originally 0.2)
-  float roughness = 0.20;
   
   // get the forward-facing normal
   vec3 forwardFacingNormal;

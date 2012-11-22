@@ -3,9 +3,6 @@
 //
 // renders a wood shading model using shaders
 
-// need to implement:
-// GUI for algorithm vars
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -26,7 +23,7 @@ GLuint v0, f0, p0;
 GLuint v1, f1, p1;
 GLuint v2, f2, p2;
 GLuint v3, f3, p3;
-GLuint p1t, p2t, p2t2, p2t3, p2t4, p3t;
+GLuint p1t, p2t, p2t2, p2t3, p2t4, p2t5, p2t6, p2t7, p3t;
 
 // swap between wood and non-wood shader
 bool wood = true;
@@ -44,6 +41,11 @@ int woodType = 1;
 int live_object_wood_type;
 GLUI_RadioGroup		*object_type_radio;
 
+// algorithm control variables
+float live_algo_eta;
+float live_algo_width;
+float live_algo_rough;
+
 // camera info
 float eye[3];
 float lookat[3];
@@ -54,6 +56,9 @@ GLUI_Rollout		*object_rollout;
 GLUI_Rotation		*object_rotation;
 GLUI_Translation	*object_xz_trans;
 GLUI_Translation	*object_y_trans;
+
+// algorithm controls
+GLUI_Rollout     *algo_rollout;
 
 // light position controls
 GLUI_Rollout     *light_rollout;
@@ -476,6 +481,9 @@ void createShaders(){
   p2t2 = glGetUniformLocation(p2, "tex");
   p2t3 = glGetUniformLocation(p2, "texHighlight");
   p2t4 = glGetUniformLocation(p2, "texFiber");
+  p2t5 = glGetUniformLocation(p2, "eta");
+  p2t6 = glGetUniformLocation(p2, "beta");
+  p2t7 = glGetUniformLocation(p2, "roughness");
   
   // clear shaders
   glDeleteShader(v2);
@@ -600,6 +608,9 @@ void drawObjects(){
         glUniform1i(p2t2, woodType);
         glUniform1i(p2t3, woodType + 1);
         glUniform1i(p2t4, woodType + 2);
+        glUniform1f(p2t5, live_algo_eta);
+        glUniform1f(p2t6, live_algo_width);
+        glUniform1f(p2t7, live_algo_rough);
         glActiveTexture(GL_TEXTURE0 + woodType);
         glBindTexture(GL_TEXTURE_2D, woodType);
         glActiveTexture(GL_TEXTURE0 + woodType + 1);
@@ -613,6 +624,9 @@ void drawObjects(){
         // set up wood shader & all textures
         glUseProgram(p2);
         glUniform1f(p2t, live_light_intensity);
+        glUniform1f(p2t5, live_algo_eta);
+        glUniform1f(p2t6, live_algo_width);
+        glUniform1f(p2t7, live_algo_rough);
         glUniform1i(p2t2, 1);
         glUniform1i(p2t3, 2);
         glUniform1i(p2t4, 3);
@@ -1078,6 +1092,9 @@ int main(int argc, char* argv[]){
   live_draw_walls = 1;
   live_draw_object = 1;
   live_light_intensity = 1;
+  live_algo_eta = 1.50;
+  live_algo_width = 0.1745;
+  live_algo_rough = 0.20;
   
   // quit button
   glui->add_button("Quit", 0, (GLUI_Update_CB)exit);
@@ -1122,6 +1139,19 @@ int main(int argc, char* argv[]){
   light_y_trans =  glui->add_translation_to_panel(light_panel, "Translate Y", GLUI_TRANSLATION_Y, &live_light_y_trans);
   GLUI_Spinner *int_l = glui->add_spinner_to_panel(light_panel, "Intensity", GLUI_SPINNER_FLOAT, &live_light_intensity);
   int_l->set_float_limits(0.0, 1.0);
+  
+  // empty space
+  glui->add_statictext("");
+  
+  // algorithm controls
+  algo_rollout = glui->add_rollout("BRDF Controls");
+  GLUI_Panel *algo_panel = glui->add_panel_to_panel(algo_rollout, "", GLUI_PANEL_NONE);
+  GLUI_Spinner *int_m = glui->add_spinner_to_panel(algo_panel, "Index of Refraction", GLUI_SPINNER_FLOAT, &live_algo_eta);
+  int_m->set_float_limits(1.0, 2.0);
+  GLUI_Spinner *int_n = glui->add_spinner_to_panel(algo_panel, "Highlight Width", GLUI_SPINNER_FLOAT, &live_algo_width);
+  int_n->set_float_limits(0.0, 1.0);
+  GLUI_Spinner *int_o = glui->add_spinner_to_panel(algo_panel, "Specular Roughness", GLUI_SPINNER_FLOAT, &live_algo_rough);
+  int_o->set_float_limits(0.0, 1.0);
   
   glui->add_statictext("");
   
