@@ -4,10 +4,6 @@
 // renders a wood shading model using shaders
 
 // need to implement:
-// manual selection of wood type
-// implement all wood types simultaneously
-// GUI for wood type selection
-// GUI for rotation options (none, object, viewer, camera)
 // GUI for algorithm vars
 
 #include <stdio.h>
@@ -39,6 +35,7 @@ bool wood = true;
 bool debug = true;
 
 // track wood object rotation
+int live_rotate_object;
 double rotation = 0.0;
 
 // store which wood type to load
@@ -64,6 +61,7 @@ GLUI_Translation *light_xz_trans;
 GLUI_Translation *light_y_trans;
 
 // disable / enable features
+GLUI_Checkbox *rotate_object_check;
 GLUI_Checkbox *draw_floor_check;
 GLUI_Checkbox *draw_walls_check;
 GLUI_Checkbox *draw_object_check;
@@ -578,7 +576,8 @@ void drawObjects(){
     
     // rotate around the y-axis & increment appropriately
     glPushMatrix();
-    glRotatef(rotation, 0.0, -1.0, 0.0);
+    if(live_rotate_object)
+      glRotatef(rotation, 0.0, -1.0, 0.0);
     rotation += 0.4;
     if(rotation >= 360.0)
       rotation -= 360.0;
@@ -646,7 +645,8 @@ void drawObjects(){
         glPopMatrix();
         glPushMatrix();
         glTranslatef(-5.0, 0.2, -5.0);
-        glRotatef(rotation, 0.0, -1.0, 0.0);
+        if(live_rotate_object)
+          glRotatef(rotation, 0.0, -1.0, 0.0);
         glBegin(GL_TRIANGLE_FAN);
           glNormal3f(0.0, -1.0, 0.0);
           glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 0.0);
@@ -666,7 +666,8 @@ void drawObjects(){
         glPopMatrix();
         glPushMatrix();
         glTranslatef(5.0, 0.2, -5.0);
-        glRotatef(rotation, 0.0, -1.0, 0.0);
+        if(live_rotate_object)
+          glRotatef(rotation, 0.0, -1.0, 0.0);
         glBegin(GL_TRIANGLE_FAN);
           glNormal3f(0.0, -1.0, 0.0);
           glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 0.0);
@@ -686,7 +687,8 @@ void drawObjects(){
         glPopMatrix();
         glPushMatrix();
         glTranslatef(5.0, 0.2, 5.0);
-        glRotatef(rotation, 0.0, -1.0, 0.0);
+        if(live_rotate_object)
+          glRotatef(rotation, 0.0, -1.0, 0.0);
         glBegin(GL_TRIANGLE_FAN);
           glNormal3f(0.0, -1.0, 0.0);
           glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 0.0);
@@ -706,7 +708,8 @@ void drawObjects(){
         glPopMatrix();
         glPushMatrix();
         glTranslatef(-5.0, 0.2, 5.0);
-        glRotatef(rotation, 0.0, -1.0, 0.0);
+        if(live_rotate_object)
+          glRotatef(rotation, 0.0, -1.0, 0.0);
         glBegin(GL_TRIANGLE_FAN);
           glNormal3f(0.0, -1.0, 0.0);
           glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 0.0);
@@ -1064,6 +1067,7 @@ int main(int argc, char* argv[]){
   
   // initialize live variables
   live_object_wood_type = 0;
+  live_rotate_object = 1;
   live_object_xz_trans[0] = 0;
   live_object_xz_trans[1] = 0;
   live_object_y_trans = 0;
@@ -1105,6 +1109,7 @@ int main(int argc, char* argv[]){
   object_y_trans =  glui->add_translation_to_panel(transform_panel, "Translate Y", GLUI_TRANSLATION_Y, &live_object_y_trans);
   object_xz_trans->scale_factor = 0.1f;
   object_y_trans->scale_factor = 0.1f;
+  glui->add_checkbox_to_panel(object_rollout, "Auto-Rotate Object", &live_rotate_object);
   
   // empty space
   glui->add_statictext("");
