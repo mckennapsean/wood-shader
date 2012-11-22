@@ -44,6 +44,8 @@ double rotation = 0.0;
 // store which wood type to load
 // 1 for maple, 4 for paduak, 7 for walnut1, 10 for walnut2, 0 for all
 int woodType = 1;
+int live_object_wood_type;
+GLUI_RadioGroup		*object_type_radio;
 
 // camera info
 float eye[3];
@@ -575,6 +577,7 @@ void drawObjects(){
     glMultMatrixf(live_object_rotation);
     
     // rotate around the y-axis & increment appropriately
+    glPushMatrix();
     glRotatef(rotation, 0.0, -1.0, 0.0);
     rotation += 0.4;
     if(rotation >= 360.0)
@@ -590,37 +593,159 @@ void drawObjects(){
     
     // set shader for wood, if active
     if(wood){
-      glUseProgram(p2);
-      glUniform1f(p2t, live_light_intensity);
-      glUniform1i(p2t2, woodType);
-      glUniform1i(p2t3, woodType + 1);
-      glUniform1i(p2t4, woodType + 2);
-      glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, woodType);
-      glActiveTexture(GL_TEXTURE2);
-      glBindTexture(GL_TEXTURE_2D, woodType + 1);
-      glActiveTexture(GL_TEXTURE3);
-      glBindTexture(GL_TEXTURE_2D, woodType + 2);
+      
+      // for a single wood type
+      if(woodType != 0){
+        glUseProgram(p2);
+        glUniform1f(p2t, live_light_intensity);
+        glUniform1i(p2t2, woodType);
+        glUniform1i(p2t3, woodType + 1);
+        glUniform1i(p2t4, woodType + 2);
+        glActiveTexture(GL_TEXTURE0 + woodType);
+        glBindTexture(GL_TEXTURE_2D, woodType);
+        glActiveTexture(GL_TEXTURE0 + woodType + 1);
+        glBindTexture(GL_TEXTURE_2D, woodType + 1);
+        glActiveTexture(GL_TEXTURE0 + woodType + 2);
+        glBindTexture(GL_TEXTURE_2D, woodType + 2);
+      
+      // for all wood types
+      }else{
+        
+        // set up wood shader & all textures
+        glUseProgram(p2);
+        glUniform1f(p2t, live_light_intensity);
+        glUniform1i(p2t2, 1);
+        glUniform1i(p2t3, 2);
+        glUniform1i(p2t4, 3);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, 1);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, 2);
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, 3);
+        glActiveTexture(GL_TEXTURE4);
+        glBindTexture(GL_TEXTURE_2D, 4);
+        glActiveTexture(GL_TEXTURE5);
+        glBindTexture(GL_TEXTURE_2D, 5);
+        glActiveTexture(GL_TEXTURE6);
+        glBindTexture(GL_TEXTURE_2D, 6);
+        glActiveTexture(GL_TEXTURE7);
+        glBindTexture(GL_TEXTURE_2D, 7);
+        glActiveTexture(GL_TEXTURE8);
+        glBindTexture(GL_TEXTURE_2D, 8);
+        glActiveTexture(GL_TEXTURE9);
+        glBindTexture(GL_TEXTURE_2D, 9);
+        glActiveTexture(GL_TEXTURE10);
+        glBindTexture(GL_TEXTURE_2D, 10);
+        glActiveTexture(GL_TEXTURE11);
+        glBindTexture(GL_TEXTURE_2D, 11);
+        glActiveTexture(GL_TEXTURE12);
+        glBindTexture(GL_TEXTURE_2D, 12);
+        
+        // draw wooden thin slab (maple)
+        glPopMatrix();
+        glPushMatrix();
+        glTranslatef(-5.0, 0.2, -5.0);
+        glRotatef(rotation, 0.0, -1.0, 0.0);
+        glBegin(GL_TRIANGLE_FAN);
+          glNormal3f(0.0, -1.0, 0.0);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 0.0);
+          glVertex3f(-3, 0, -3);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 1.0, 0.0);
+          glVertex3f( 3, 0, -3);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 1.0, 1.0);
+          glVertex3f( 3, 0, 3);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 1.0);
+          glVertex3f(-3, 0, 3);
+        glEnd();
+        
+        // draw wooden thin slab (padauk)
+        glUniform1i(p2t2, 4);
+        glUniform1i(p2t3, 5);
+        glUniform1i(p2t4, 6);
+        glPopMatrix();
+        glPushMatrix();
+        glTranslatef(5.0, 0.2, -5.0);
+        glRotatef(rotation, 0.0, -1.0, 0.0);
+        glBegin(GL_TRIANGLE_FAN);
+          glNormal3f(0.0, -1.0, 0.0);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 0.0);
+          glVertex3f(-3, 0, -3);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 1.0, 0.0);
+          glVertex3f( 3, 0, -3);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 1.0, 1.0);
+          glVertex3f( 3, 0, 3);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 1.0);
+          glVertex3f(-3, 0, 3);
+        glEnd();
+        
+        // draw wooden thin slab (walnut 1)
+        glUniform1i(p2t2, 7);
+        glUniform1i(p2t3, 8);
+        glUniform1i(p2t4, 9);
+        glPopMatrix();
+        glPushMatrix();
+        glTranslatef(5.0, 0.2, 5.0);
+        glRotatef(rotation, 0.0, -1.0, 0.0);
+        glBegin(GL_TRIANGLE_FAN);
+          glNormal3f(0.0, -1.0, 0.0);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 0.0);
+          glVertex3f(-3, 0, -3);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 1.0, 0.0);
+          glVertex3f( 3, 0, -3);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 1.0, 1.0);
+          glVertex3f( 3, 0, 3);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 1.0);
+          glVertex3f(-3, 0, 3);
+        glEnd();
+        
+        // draw wooden thin slab (walnut 2)
+        glUniform1i(p2t2, 10);
+        glUniform1i(p2t3, 11);
+        glUniform1i(p2t4, 12);
+        glPopMatrix();
+        glPushMatrix();
+        glTranslatef(-5.0, 0.2, 5.0);
+        glRotatef(rotation, 0.0, -1.0, 0.0);
+        glBegin(GL_TRIANGLE_FAN);
+          glNormal3f(0.0, -1.0, 0.0);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 0.0);
+          glVertex3f(-3, 0, -3);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 1.0, 0.0);
+          glVertex3f( 3, 0, -3);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 1.0, 1.0);
+          glVertex3f( 3, 0, 3);
+          glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 1.0);
+          glVertex3f(-3, 0, 3);
+        glEnd();
+        
+        rotation += 0.4;
+        if(rotation >= 360.0)
+          rotation -= 360.0;
+      }
     }else{
       glUseProgram(p0);
     }
     
-    // draw wooden thin slab
-    glTranslatef(0, 0.2, 0);
-    glBegin(GL_TRIANGLE_FAN);
-      glNormal3f(0.0, -1.0, 0.0);
-      glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 0.0);
-      glVertex3f(-7, 0, -7);
-      glMultiTexCoord2fARB(GL_TEXTURE1, 1.0, 0.0);
-      glVertex3f( 7, 0, -7);
-      glMultiTexCoord2fARB(GL_TEXTURE1, 1.0, 1.0);
-      glVertex3f( 7, 0, 7);
-      glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 1.0);
-      glVertex3f(-7, 0, 7);
-    glEnd();
+    // draw wooden thin slab (only one)
+    if(woodType != 0){
+      glTranslatef(0, 0.2, 0);
+      glBegin(GL_TRIANGLE_FAN);
+        glNormal3f(0.0, -1.0, 0.0);
+        glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 0.0);
+        glVertex3f(-7, 0, -7);
+        glMultiTexCoord2fARB(GL_TEXTURE1, 1.0, 0.0);
+        glVertex3f( 7, 0, -7);
+        glMultiTexCoord2fARB(GL_TEXTURE1, 1.0, 1.0);
+        glVertex3f( 7, 0, 7);
+        glMultiTexCoord2fARB(GL_TEXTURE1, 0.0, 1.0);
+        glVertex3f(-7, 0, 7);
+      glEnd();
+    }
     
     // clean-up
     glUseProgram(p0);
+    glPopMatrix();
     glPopMatrix();
   }
 }
@@ -738,6 +863,18 @@ void myGlutDisplay(void){
   // clear what's left
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
+  // set the wood type
+  if(live_object_wood_type == 0)
+    woodType = 1;
+  else if(live_object_wood_type == 1)
+    woodType = 4;
+  else if(live_object_wood_type == 2)
+    woodType = 7;
+  else if(live_object_wood_type == 3)
+    woodType = 10;
+  else if(live_object_wood_type == 4)
+    woodType = 0;
+  
   // activate the base shader
   glUseProgram(p0);
   
@@ -843,6 +980,60 @@ void init(void){
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
   free(image);
   
+  // import maple wood image
+  image = read_texture("tex/walnut1.rgb", &width, &height, &components);
+  glBindTexture(GL_TEXTURE_2D, 7);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  free(image);
+  
+  // import maple wood highlight image
+  image = read_texture("tex/walnut1Highlight.rgb", &width, &height, &components);
+  glBindTexture(GL_TEXTURE_2D, 8);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  free(image);
+  
+  // import maple wood fiber texture
+  image = read_texture("tex/walnut1Fiber.rgb", &width, &height, &components);
+  glBindTexture(GL_TEXTURE_2D, 9);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  free(image);
+  
+  // import maple wood image
+  image = read_texture("tex/walnut2.rgb", &width, &height, &components);
+  glBindTexture(GL_TEXTURE_2D, 10);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  free(image);
+  
+  // import maple wood highlight image
+  image = read_texture("tex/walnut2Highlight.rgb", &width, &height, &components);
+  glBindTexture(GL_TEXTURE_2D, 11);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  free(image);
+  
+  // import maple wood fiber texture
+  image = read_texture("tex/walnut2Fiber.rgb", &width, &height, &components);
+  glBindTexture(GL_TEXTURE_2D, 12);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  free(image);
+  
   // create all the shaders
   createShaders();
 }
@@ -872,6 +1063,7 @@ int main(int argc, char* argv[]){
   glui = GLUI_Master.create_glui_subwindow(main_window, GLUI_SUBWINDOW_LEFT);
   
   // initialize live variables
+  live_object_wood_type = 0;
   live_object_xz_trans[0] = 0;
   live_object_xz_trans[1] = 0;
   live_object_y_trans = 0;
@@ -891,6 +1083,16 @@ int main(int argc, char* argv[]){
   
   // the object rollout
   object_rollout = glui->add_rollout("Object");
+  
+  // select the wood type
+  glui->add_statictext_to_panel(object_rollout, "Wood Type");
+  object_type_radio = glui->add_radiogroup_to_panel(object_rollout, &live_object_wood_type);
+  glui->add_radiobutton_to_group(object_type_radio, "maple");
+  glui->add_radiobutton_to_group(object_type_radio, "padauk");
+  glui->add_radiobutton_to_group(object_type_radio, "walnut1");
+  glui->add_radiobutton_to_group(object_type_radio, "walnut2");
+  glui->add_radiobutton_to_group(object_type_radio, "all types");
+  glui->add_column_to_panel(object_rollout, false);
   
   // object rotation and translation controls
   // we need an extra panel to keep things grouped properly
