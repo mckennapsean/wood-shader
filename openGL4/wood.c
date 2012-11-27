@@ -29,7 +29,7 @@ GLuint p1t, p2t, p2t2, p2t3, p2t4, p2t5, p2t6, p2t7, p3t;
 bool wood = true;
 
 // whether to debug shaders or not
-bool debug = true;
+bool debug = false;
 
 // track wood object rotation
 int live_rotate_object;
