@@ -30,7 +30,6 @@
   
   <body>
     <div class="reveal">
-      <!-- any section element in this container is a slide -->
       <div class="slides">
       
       
@@ -51,8 +50,7 @@
   
   <aside class="notes">
     wood with a coat or a finish looks beautiful
-    used in many decorative pieces
-    has a very distinct look
+    used for decoration due to its distinct look
     due to lamination & the wood
     why? light reflection from lamination & light scattering from fibers inside the wood
     previous work on the laminate, not on wood
@@ -62,8 +60,11 @@
 
 
 <section>
-  <h2> wood features </h2>
+  <h2> features of wood </h2>
   <img src="img/tiger.png" alt="tiger feature on a wood surface" />
+  <p>
+    like birds-eye, burl, tiger, etc.
+  </p>
   
   <aside class="notes">
     wood has many unique features
@@ -78,6 +79,13 @@
 <section>
   <h2> wood fibers </h2>
   <img src="img/micrograph.png" alt="electron micrograph of wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
+  <p>
+    electron micrograph of wood
+  </p>
+  <p>
+    fibers and wood are anisotropic
+  </p>
+  
   
   <aside class="notes">
     image is an electron micrograph of wood
@@ -93,6 +101,9 @@
 <section>
   <h2> modeling the BRDF </h2>
   <img src="img/subsurface.png" alt="interactions of light on and inside wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
+  <p>
+    bidirectional reflectance distribution function (BRDF)
+  </p>
   
   <aside class="notes">
     model for the bidirectional reflectance distribution function (or BRDF)
@@ -105,13 +116,19 @@
 
 <section>
   <h2> modeling the highlight </h2>
+  
+  <pre> <code contenteditable>// blur the highlight along a Gaussian
+float spread = exp(-pow(psiH / beta, 2) / 2.0) / sqrt2pi / beta;
+</code> </pre>
+
   <img src="img/highlight.png" alt="generation of the sub-surface reflection highlight in wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
   
   <aside class="notes">
     again, this is simply the reflection due to the sub-surface interactions along the wood fiber
     the highlight is Gaussian-blurred along a cone, relative to the angle of the wood fiber
-    (maybe show equation & code from the fix I made...)
     cone angle varies along the wood, resulting in anisotropy or distinct features
+    in my version of the shader, there was a correction I made to the published code
+    now, let's see what the wood shader looks like
   </aside>
 </section>
 
@@ -119,6 +136,9 @@
 <section>
   <h2> revolving wood </h2>
   <img src="img/wood.gif" alt="maple wood rotating about the camera with fixed camera and lighting" />
+  <p>
+    interactive wood shader
+  </p>
   
   <aside class="notes">
     rotates wood to highlight the anisotropy
@@ -134,12 +154,19 @@
   <h2> comparison to the paper </h2>
   <img src="img/walnut-paper.png" alt="walnut wood from the original paper's video" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
   <img src="img/walnut-project.png" alt="walnut wood rendered from this project's code" />
+  <p>
+    <ul>
+      <li> emulate the paper </li>
+      <li> surface reflection highlight </li>
+      <li> real world-comparison </li>
+    </ul>
+  </p>
   
   <aside class="notes">
     a rendered image from the paper
     alongside a rendered image from my code
-    major differences in quality, coloring, lighting
     difficult to fully emulate
+    major differences in quality, coloring, lighting
     future work: try and emulate more completely, add surface reflection highlight, real-world comparisons
   </aside>
 </section>
@@ -151,99 +178,16 @@
   <img src="img/padauk.png" alt="final figure in the original paper using a Renderman shader, highlighting padauk wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
   <img src="img/walnut.png" alt="final figure in the original paper using a Renderman shader, highlighting walnut wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
   
-  <!-- add citation of the paper here -->
+  <ul>
+    <li> Measuring and Modeling the Appearance of Finished Wood </li>
+    <li> <em> Stephen R. Marschner, Stephen H. Westin, Adam Arbree, and Jonathan T. Moon. </em> </li>
+    <li> In Proceedings of <em> SIGGRAPH 2005 </em>. Held in Los Angeles, California, July 2005. </li>
+  </ul>
   
   <aside class="notes">
+    just some of the final renders from the original paper
     thank you for your time!
   </aside>
-</section>
-
-
-<section>
-  <h2> some list </h2>
-  <ul>
-    <li> not ordered at all </li>
-    <li> just a couple </li>
-    <li> of items </li>
-  </ul>
-</section>
-
-
-<section>
-  <h2> ordered list </h2>
-  <ol>
-    <li> let's now </li>
-    <li> keep some </li>
-    <li> order to </li>
-    <li> all this </li>
-    <li> <strong> MADNESS! </strong> </li>
-  </ol>
-</section>
-
-
-<section>
-  <h2> Some Quotes </h2>
-  <p>
-    inline: <q cite="http://www.google.com/"> Some fanciful quote goes here." </q>
-    and in block format:
-  </p>
-  
-  <blockquote cite="http://www.google.com/">
-    Some fanciful quote goes here.
-  </blockquote>
-</section>
-
-
-<section>
-  <h2> some code </h2>
-  
-  <pre> <code contenteditable>
-vec3 crossProduct(vec3 A, vec3 B){
-  float Cx = A.y * B.z - A.z * B.y;
-  float Cy = A.z * B.x - A.x * B.z;
-  float Cz = A.x * B.y - A.y * B.x;
-  vec3 C = vec3(Cx, Cy, Cz);
-  return C;
-}
-  </code> </pre>
-</section>
-
-
-<section>
-  <h2> lost? </h2>
-  
-  <p>
-    It's okay, go <a href="#/0"> back to the beginning </a> !
-  </p>
-</section>
-
-
-<section>
-  <h2> list that comes over time </h2>
-  
-  <p class="fragment">
-    try this out
-  </p>
-  
-  <ol>
-    <li class="fragment"> the list </li>
-    <li class="fragment"> comes slowly </li>
-  </ol>
-</section>
-
-
-<section>
-  <h2> an image </h2>
-  
-  <a class="image" href="http://www.google.com" target="_blank">
-    <img src="img/finished-wood.jpg" alt="finished wood image" />
-  </a>
-</section>
-
-
-<section>
-  <h1> THE END </h1>
-  <h3> BY Sean McKenna </h3>
 </section>
 
 
