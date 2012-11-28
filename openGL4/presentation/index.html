@@ -37,32 +37,125 @@
       
 <section>
   <h1> Modeling the Appearance of Finished Wood </h1>
-  <h3> even more header text? </h3>
-<!-- image credit http://img1.etsystatic.com/005/0/6663377/il_fullxfull.374926313_s3kn.jpg -->
+  <h3> by Sean McKenna </h3>
   
   <p>
-    <small> created by Sean McKenna </small>
+    <small> original paper by Marschner et al. </small>
   </p>
 </section>
 
 
 <section>
-  <h2> Slide Two </h2>
-  <p>
-    something about my info
-  </p>
+  <h2> finished wood </h2>
+  <img src="img/finished-wood.jpg" alt="real finished wood" cite="http://img1.etsystatic.com/005/0/6663377/il_fullxfull.374926313_s3kn.jpg" />
   
   <aside class="notes">
-    add slide notes here
+    wood with a coat or a finish looks beautiful
+    used in many decorative pieces
+    has a very distinct look
+    due to lamination & the wood
+    why? light reflection from lamination & light scattering from fibers inside the wood
+    previous work on the laminate, not on wood
+    so let's take a closer look at wood
   </aside>
 </section>
 
 
 <section>
-  <h2> slide three </h2>
-  <p>
-    try to test the <strong> strength </strong> of words
-  </p>
+  <h2> wood features </h2>
+  <img src="img/tiger.png" alt="tiger feature on a wood surface" />
+  
+  <aside class="notes">
+    wood has many unique features
+    e.g. birds-eye, burl, tiger, and many more
+    example shows the stripes along the wood, aka tiger
+    these features scatter light most dramatically
+    why? to understand, we must explore wood even deeper
+  </aside>
+</section>
+
+
+<section>
+  <h2> wood fibers </h2>
+  <img src="img/micrograph.png" alt="electron micrograph of wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
+  
+  <aside class="notes">
+    image is an electron micrograph of wood
+    shows the fibers buried inside the wood itself
+    wood varies spatially, anisotropic
+    fibers vary too, creating the distinct look
+    authors measured and stored these fiber directions in textures
+    to know what to do with these measurements, need to go back to theory
+  </aside>
+</section>
+
+
+<section>
+  <h2> modeling the BRDF </h2>
+  <img src="img/subsurface.png" alt="interactions of light on and inside wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
+  
+  <aside class="notes">
+    model for the bidirectional reflectance distribution function (or BRDF)
+    defines the reflection of light off the surface, yielding radiance
+    reflection along wood fibers results in a sub-surface reflection of light
+    rendering this reflection highlight is the focus of the paper and this project
+  </aside>
+</section>
+
+
+<section>
+  <h2> modeling the highlight </h2>
+  <img src="img/highlight.png" alt="generation of the sub-surface reflection highlight in wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
+  
+  <aside class="notes">
+    again, this is simply the reflection due to the sub-surface interactions along the wood fiber
+    the highlight is Gaussian-blurred along a cone, relative to the angle of the wood fiber
+    (maybe show equation & code from the fix I made...)
+    cone angle varies along the wood, resulting in anisotropy or distinct features
+  </aside>
+</section>
+
+
+<section>
+  <h2> revolving wood </h2>
+  <img src="img/wood.gif" alt="maple wood rotating about the camera with fixed camera and lighting" />
+  
+  <aside class="notes">
+    rotates wood to highlight the anisotropy
+    ability to control camera, light, wood
+    provides multiple texture options
+    can compare all four wood textures side-by-side
+    all implemented in real-time interactively using the wood shading model
+  </aside>
+</section>
+
+
+<section>
+  <h2> comparison to the paper </h2>
+  <img src="img/walnut-paper.png" alt="walnut wood from the original paper's video" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
+  <img src="img/walnut-project.png" alt="walnut wood rendered from this project's code" />
+  
+  <aside class="notes">
+    a rendered image from the paper
+    alongside a rendered image from my code
+    major differences in quality, coloring, lighting
+    difficult to fully emulate
+    future work: try and emulate more completely, add surface reflection highlight, real-world comparisons
+  </aside>
+</section>
+
+
+<section>
+  <h2> references </h2>
+  <img src="img/maple.png" alt="final figure in the original paper using a Renderman shader, highlighting maple wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
+  <img src="img/padauk.png" alt="final figure in the original paper using a Renderman shader, highlighting padauk wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
+  <img src="img/walnut.png" alt="final figure in the original paper using a Renderman shader, highlighting walnut wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
+  
+  <!-- add citation of the paper here -->
+  
+  <aside class="notes">
+    thank you for your time!
+  </aside>
 </section>
 
 
