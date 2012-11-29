@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     
     <link rel="stylesheet" href="css/reveal.min.css">
-    <link rel="stylesheet" href="css/theme/default.css" id="theme">
+    <link rel="stylesheet" href="css/theme/simple2.css" id="theme">
     
     <!-- for syntax highlighting-->
     <link rel="stylesheet" href="lib/css/zenburn.css">
@@ -178,9 +178,9 @@ float spread = exp(-pow(psiH / beta, 2) / 2.0) / sqrt2pi / beta;
   <img src="img/padauk.png" width=275 height=250 alt="final figure in the original paper using a Renderman shader, highlighting padauk wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
   <img src="img/walnut.png" width=275 height=250 alt="final figure in the original paper using a Renderman shader, highlighting walnut wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
   
-  <p> <small> <strong>
+  <p> <small> <strong> <a href="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html">
     Measuring and Modeling the Appearance of Finished Wood
-  </p> </strong> <p>
+  </p> </strong> </a> <p>
     <em> Stephen R. Marschner, Stephen H. Westin, Adam Arbree, and Jonathan T. Moon </em>
   </p> <p>
     in Proceedings of <em> SIGGRAPH 2005 </em>
@@ -209,7 +209,8 @@ float spread = exp(-pow(psiH / beta, 2) / 2.0) / sqrt2pi / beta;
         progress: true,
         history: true,
         center: true,
-        theme: 'default',
+        theme: 'simple2',
+        rollingLinks: false,
         transition: 'none',
         dependencies: [
           {src: 'lib/js/classList.js', condition: function(){ return !document.body.classList; } },
