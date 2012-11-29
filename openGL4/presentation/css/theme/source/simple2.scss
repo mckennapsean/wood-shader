@@ -15,16 +15,13 @@
 
 
 // Include theme-specific fonts
-//@import url(http://fonts.googleapis.com/css?family=News+Cycle:400,700);
-//@import url(http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);
-//$mainFont: 'Lato', Times, 'Times New Roman', serif;
-//$headingFont: 'News Cycle', Impact, sans-serif;
-
+@import url(http://fonts.googleapis.com/css?family=Mouse+Memoirs);
+@import url(http://fonts.googleapis.com/css?family=Rosarivo);
 
 // Override theme settings (see ../template/settings.scss)
-$mainFont: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+$mainFont: 'Rosarivo', FreeSerif, serif;
 $mainColor: #000;
-$headingFont: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+$headingFont: 'Mouse Memoirs', sans-serif;
 $headingColor: #383D3D;
 $headingTextShadow: none;
 $headingTextTransform: none;

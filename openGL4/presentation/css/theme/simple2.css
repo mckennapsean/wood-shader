@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Mouse+Memoirs);
+@import url(http://fonts.googleapis.com/css?family=Rosarivo);
 /**
  * A modified simple theme for reveal.js presentations, similar 
  * to the default theme. The accent color is darkblue.
@@ -14,7 +16,7 @@ body {
 }
 
 .reveal {
-  font-family: "Palatino Linotype", "Book Antiqua", Palatino, FreeSerif, serif;
+  font-family: "Rosarivo", FreeSerif, serif;
   font-size: 36px;
   font-weight: 200;
   letter-spacing: -0.02em;
@@ -38,7 +40,7 @@ body {
 .reveal h6 {
   margin: 0 0 20px 0;
   color: #383d3d;
-  font-family: "Palatino Linotype", "Book Antiqua", Palatino, FreeSerif, serif;
+  font-family: "Mouse Memoirs", sans-serif;
   line-height: 0.9em;
   letter-spacing: 0.02em;
   text-transform: none;
