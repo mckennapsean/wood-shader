@@ -115,9 +115,9 @@
 
 
 <section>
-  <h2> modeling the highlight </h2>
+  <h2> sub-surface highlight </h2>
   
-  <pre> <code contenteditable>// blur the highlight along a Gaussian
+  <pre> <code contenteditable>// blur the highlight along a Gaussian distribution
 float spread = exp(-pow(psiH / beta, 2) / 2.0) / sqrt2pi / beta;
 </code> </pre>
 
@@ -151,10 +151,10 @@ float spread = exp(-pow(psiH / beta, 2) / 2.0) / sqrt2pi / beta;
 
 
 <section>
-  <h2> comparison to the paper </h2>
-  <img src="img/walnut-paper.png" alt="walnut wood from the original paper's video" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
-  <img src="img/walnut-project.png" alt="walnut wood rendered from this project's code" />
-  <p>
+  <h2> image comparison </h2>
+  <img src="img/walnut-paper.png" width=425 alt="walnut wood from the original paper's video" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
+  <img src="img/walnut-project.png" width=425 alt="walnut wood rendered from this project's code" />
+  <p> <strong> <em> future work </strong> </em>
     <ul>
       <li> emulate the paper </li>
       <li> surface reflection highlight </li>
@@ -174,15 +174,19 @@ float spread = exp(-pow(psiH / beta, 2) / 2.0) / sqrt2pi / beta;
 
 <section>
   <h2> references </h2>
-  <img src="img/maple.png" alt="final figure in the original paper using a Renderman shader, highlighting maple wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
-  <img src="img/padauk.png" alt="final figure in the original paper using a Renderman shader, highlighting padauk wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
-  <img src="img/walnut.png" alt="final figure in the original paper using a Renderman shader, highlighting walnut wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
+  <img src="img/maple.png" width=275 height=250 alt="final figure in the original paper using a Renderman shader, highlighting maple wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
+  <img src="img/padauk.png" width=275 height=250 alt="final figure in the original paper using a Renderman shader, highlighting padauk wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
+  <img src="img/walnut.png" width=275 height=250 alt="final figure in the original paper using a Renderman shader, highlighting walnut wood" cite="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html" />
   
-  <ul>
-    <li> Measuring and Modeling the Appearance of Finished Wood </li>
-    <li> <em> Stephen R. Marschner, Stephen H. Westin, Adam Arbree, and Jonathan T. Moon. </em> </li>
-    <li> In Proceedings of <em> SIGGRAPH 2005 </em>. Held in Los Angeles, California, July 2005. </li>
-  </ul>
+  <p> <small> <strong>
+    Measuring and Modeling the Appearance of Finished Wood
+  </p> </strong> <p>
+    <em> Stephen R. Marschner, Stephen H. Westin, Adam Arbree, and Jonathan T. Moon </em>
+  </p> <p>
+    in Proceedings of <em> SIGGRAPH 2005 </em>
+  </p> <p>
+    held in Los Angeles, California, July 2005
+  </p> </small>
   
   <aside class="notes">
     just some of the final renders from the original paper
