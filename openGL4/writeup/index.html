@@ -1,10 +1,40 @@
 <html>
 <head>
+<!-- Google Web Fonts -->
+<link href='http://fonts.googleapis.com/css?family=Mouse+Memoirs' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Rosarivo' rel='stylesheet' type='text/css'>
 <!-- image rollover & all CSS code -->
 <style type="text/css">
   body{
     margin: auto;
     width: 45%;
+  }
+  h1{
+    text-align: center;
+    font-family: 'Mouse Memoirs', sans-serif;
+    font-size: 300%;
+  }
+  h2{
+    text-align: center;
+    font-family: 'Mouse Memoirs', sans-serif;
+    font-size: 200%;
+  }
+  p.name{
+    text-align: center;
+    font-family: 'Mouse Memoirs', sans-serif;
+    font-size: 150%;
+  }
+  p.center{
+    text-align: center;
+  }
+  p{
+    font-family: 'Rosarivo', FreeSerif, serif;
+    font-size: 120%;
+  }
+  img.center{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
   nav li{
     position: relative;
@@ -45,21 +75,21 @@
   Modeling the Appearance of Finished Wood
 </h1>
 
-<p>
+<p class="name">
   by Sean McKenna
 </p>
 
-<img src="../presentation/img/wood.gif" height=300px />
+<img src="../presentation/img/wood.gif" height=300px class="center" />
 
 <br />
 
 <h2> Summary </h2>
 
 <p>
-  The <a href="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html"> original paper</a> established a new sub-surface reflection component to the bidirectional reflectance distribution function (BRDF) that created a sub-surface highlight distinct to the appearance of actual, finished wood. The key features of this process include identifying the direction and angle of the sub-surface wooden fibers, refracating and reflecting the incoming light ray along this angled wooden fiber, and producing a Gaussian-spread along a cone in the direction of this angled reflection ray. All of these features were coded in this project to emulate the work done by Marschner et al. A sample, rendered image of tiger wood is presented below.
+  The <a href="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html"> original paper</a> established a new sub-surface reflection component to the bidirectional reflectance distribution function (BRDF) that creates a sub-surface highlight distinct to the appearance of actual, finished wood. The key features of this process include identifying the direction/angle of the sub-surface wooden fibers, refracating and reflecting the incoming light ray along this angled wooden fiber, and producing a Gaussian-spread along a cone in the direction of this angled reflection ray. All of these features were coded to emulate the work done by Marschner et al. A sample, rendered image of tiger wood is presented below.
 </p>
 
-<img src="../presentation/img/tiger.png" height=450px />
+<img src="../presentation/img/tiger.png" height=450px class="center" />
 
 <br />
 
@@ -93,14 +123,14 @@
   The GUI is the basic window and environment used in all other assignments for this course, as in the image below (the wood is padauk here). The object is a simple, thin "slab" of wood. The object can be moved, deactivated, and textures can be changed. There is a choice between any (or all) of the following wood types: maple, padauk, walnut1, and walnut2. These textures and input data come straight from the original authors' published data. By default, the wooden slab rotates about the scene, but this can be toggled off as well.
 </p>
 
-<img src="gui.png" height=500px />
+<img src="gui.png" height=500px class="center" />
 
 <p>
-  The light and camera can both be moved as in previous assignments. Moving the light or rotating the camera will show how the sub-surface reflected highlight moves on the wooden surface, as can be seen in the images on this page. The keyboard button 'w' will toggle the wood shading model and textures off and on. A regular Phong shader is used for the rest of the scene and to mimic a surface reflection highlight on the wood as well, as the original authors also did.
+  The light and camera can both be moved as in previous assignments. Moving the light or rotating the camera will show how the sub-surface reflected highlight moves on the wooden surface, as can be seen in the images on this page. The keyboard button 'w' will toggle the wood shading model and textures off and on. A regular Phong shader is used to mimic a surface reflection highlight on the wood as well, as the original authors also did.
 </p>
 
 <p>
-  Additionally, several key variables using in the BRDF have been added as adjustable variables in the GUI. First, the index of refraction, can adjust the angle of refracation caused by the light traveling through the wood sub-surface, default set to 1.5. Interestingly, this variable does not have a large change in the actual render output (from afar). The width of the sub-surface highlight can also be adjusted, which very obviously gets smaller or larger with the size of that variable. Lastly, the specular roughness is one of the factors used for the Gaussian distribution, so light gets more spread out along the surface as this value increases (though the change is not too large).
+  Additionally, several key variables in the BRDF have been added as adjustable variables in the GUI. First, the index of refraction can be adjusted, changing how the light travels through the wood sub-surface. Interestingly, this variable does not have a large change in the actual render output (from afar). The width of the sub-surface highlight can also be adjusted, which very obviously gets smaller or larger with the size of that variable. Lastly, the specular roughness is one of the factors used for the Gaussian distribution, so light gets more spread out along the surface as this value increases (though the change is not too large).
 </p>
 
 <br />
@@ -108,20 +138,20 @@
 <h2> Future Work </h2>
 
 <p>
-  There are several more steps that would have been nice to complete, given more time. One thing that proved to be quite difficult was emulating the rendered images from the original papers. The fact is, this requires basically copying the same lighting parameters, shader code, etc. that would make this near impossible to fully achieve. Some of these features could have been better simulated by adjusting lighting and color material parameters for similar blending, but, since the authors used Renderman for their rendered images, it was the best that could be done in reasonable time using OpenGL. Going beyond even the work in the original paper, the actual surface reflection highlight could have been more appropriately modeled into the BRDF. Lastly, it would have been neat to compare rendered images of wood to other real images of wood in a similar environment, again in an attempt to validate the efficacy of the realism of this BRDF model. This would not have been as exact or precise as the measurements presented by the original authors. Instead, it would have been more of a proof-of-concept validation.
+  There are several more steps that would have been nice to complete, given more time. One thing that proved to be quite difficult was emulating the rendered images from the original papers. The fact is, this requires basically copying the same lighting parameters, shader code, etc. that would make this near impossible to fully achieve. Some of these features could have been better simulated by adjusting lighting and color material parameters for similar blending, but, since the authors used Renderman for their rendered images, it was the best that could be done in reasonable time using OpenGL. Going beyond even the work in the original paper, the actual surface reflection highlight could have been more appropriately modeled into the BRDF. Lastly, it would have been neat to compare rendered images of wood to other real images of wood in a similar environment, again in an attempt to validate the efficacy of the realism of this BRDF model. This would not have been as exact or precise as the measurements presented by the original authors. Instead, it would have been more of a proof-of-concept.
 </p>
 
 <br />
 
 <h2> References </h2>
 
-<p> <strong> <a href="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html">
+<p class="center"> <strong> <a href="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html">
   Measuring and Modeling the Appearance of Finished Wood
-</p> </strong> </a> <p> <small>
+</p> </strong> </a> <p class="center"> <small>
   <em> Stephen R. Marschner, Stephen H. Westin, Adam Arbree, and Jonathan T. Moon </em>
-</p> <p>
+</p> <p class="center">
   in Proceedings of <em> SIGGRAPH 2005 </em>
-</p> <p>
+</p> <p class="center">
   held in Los Angeles, California, July 2005
 </p> </small>
 
