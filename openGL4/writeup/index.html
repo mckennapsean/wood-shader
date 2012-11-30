@@ -1,4 +1,44 @@
 <html>
+<head>
+<!-- image rollover & all CSS code -->
+<style type="text/css">
+  body{
+    margin: auto;
+    width: 45%;
+  }
+  nav li{
+    position: relative;
+    min-height: 455px;
+  }
+  nav li img{
+    margin: auto;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    -webkit-transition-duration: 1.5s;
+    -moz-transition-duration: 1.5s;
+    -o-transition-duration: 1.5s;
+    -ms-transition-duration: 1.5s;
+    transition-duration: 1.5s;
+    opacity: 1;
+  }
+  nav li img:first-child{
+    opacity: 0;
+  }
+  nav li:hover img{
+    opacity: 0;
+  }
+  nav li:hover img:first-child{
+    opacity: 1;
+  }
+  nav li a{
+    display: block;
+  }
+</style>
+</head>
+
 <body>
 
 <h1>
@@ -9,13 +49,17 @@
   by Sean McKenna
 </p>
 
+<img src="../presentation/img/wood.gif" height=300px />
+
 <br />
 
 <h2> Summary </h2>
 
 <p>
-  The <a href="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html"> original paper</a> established a new sub-surface reflection component to the bidirectional reflectance distribution function (BRDF) that created a sub-surface highlight distinct to the appearance of actual, finished wood. The key features of this process include identifying the direction and angle of the sub-surface wooden fibers, refracating and reflecting the incoming light ray along this angled wooden fiber, and producing a Gaussian-spread along a cone in the direction of this angled reflection ray. All of these features were coded in this project to emulate the work done by Marschner et al.
+  The <a href="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html"> original paper</a> established a new sub-surface reflection component to the bidirectional reflectance distribution function (BRDF) that created a sub-surface highlight distinct to the appearance of actual, finished wood. The key features of this process include identifying the direction and angle of the sub-surface wooden fibers, refracating and reflecting the incoming light ray along this angled wooden fiber, and producing a Gaussian-spread along a cone in the direction of this angled reflection ray. All of these features were coded in this project to emulate the work done by Marschner et al. A sample, rendered image of tiger wood is presented below.
 </p>
+
+<img src="../presentation/img/tiger.png" height=450px />
 
 <br />
 
@@ -34,16 +78,22 @@
 </p>
 
 <p>
-  Interestingly, the implementation of the shader used by the original authors for the rendered images in the paper was "wrong." I emailed the first author on the paper (Dr. Marschner at Cornell University), and pointed out an error in a piece of code they had used for the normalized Gaussian distribution. He stated in his email that the only real, resulting difference was a change in one of the other variables for generating the highlighted surface, but nonetheless, I have fixed this normalized Gaussian distribution in my shader implementation. I was not exactly sure which variable he said it would need to change, but that could explain some differences in the renders generated from my program.
+  Interestingly, the implementation of the shader used by the original authors for the rendered images in the paper was "wrong." I emailed the first author on the paper (Dr. Marschner at Cornell University), and pointed out an error in a piece of code they had used for the normalized Gaussian distribution. The problem was multiplying their Gaussian by the beta factor, instead of dividing. He stated in his email that the only real, resulting difference was a change in one of the other variables for generating the highlighted surface, but nonetheless, I have fixed this normalized Gaussian distribution in my shader implementation (wood.frag, line 152). I was not exactly sure which variable he said it would need to change, but that could explain some differences in the renders generated from my program. Below, a rendered image from the original paper appears, and you can hover over it to replace it with the same piece of wood rendered using my shader code. The original author's image of this wood (walnut) is significantly different since it is more grainy (best quality I could find from their videos) and appears slightly lighter / less contrast than my rendered wood.
 </p>
+
+<nav> <ul type=none> <li>
+  <img src="../presentation/img/walnut-project.png" height=450px /> <img src="../presentation/img/walnut-paper.png" height=450px /> <a id="foobar" href="#"> </a>
+</li> </ul> </nav>
 
 <br />
 
 <h2> Interface </h2>
 
 <p>
-  The GUI is the basic window and environment used in all other assignments for this course. The object is a simple, thin "slab" of wood. The object can be moved, deactivated, and textures can be changed. There is a choice between any (or all) of the following wood types: maple, padauk, walnut1, and walnut2. These textures and input data come straight from the original authors' published data. By default, the wooden slab rotates about the scene, but this can be toggled off as well.
+  The GUI is the basic window and environment used in all other assignments for this course, as in the image below (the wood is padauk here). The object is a simple, thin "slab" of wood. The object can be moved, deactivated, and textures can be changed. There is a choice between any (or all) of the following wood types: maple, padauk, walnut1, and walnut2. These textures and input data come straight from the original authors' published data. By default, the wooden slab rotates about the scene, but this can be toggled off as well.
 </p>
+
+<img src="gui.png" height=500px />
 
 <p>
   The light and camera can both be moved as in previous assignments. Moving the light or rotating the camera will show how the sub-surface reflected highlight moves on the wooden surface, as can be seen in the images on this page. The keyboard button 'w' will toggle the wood shading model and textures off and on. A regular Phong shader is used for the rest of the scene and to mimic a surface reflection highlight on the wood as well, as the original authors also did.
