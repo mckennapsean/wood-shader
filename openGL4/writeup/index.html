@@ -2,40 +2,78 @@
 <body>
 
 <h1>
-  Measuring and Modeling the Appearance of Finished Wood
+  Modeling the Appearance of Finished Wood
 </h1>
 
 <p>
-  wood.cpp has been written by Sean McKenna to implement <a href="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html">a realistic wood shading model BRDF</a> (bidirectional reflectance distribution function).
+  by Sean McKenna
 </p>
 
-<img src="img/wood0.png" />
+<br />
+
+<h2> Summary </h2>
 
 <p>
-  The GUI is the basic window and environment used in all other assignments for this course. The object is a simple, thin "slab" of wood, currently just a plain-brown-colored surface. The object and light can both be moved.
+  The <a href="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html"> original paper</a> established a new sub-surface reflection component to the bidirectional reflectance distribution function (BRDF) that created a sub-surface highlight distinct to the appearance of actual, finished wood. The key features of this process include identifying the direction and angle of the sub-surface wooden fibers, refracating and reflecting the incoming light ray along this angled wooden fiber, and producing a Gaussian-spread along a cone in the direction of this angled reflection ray. All of these features were coded in this project to emulate the work done by Marschner et al.
 </p>
 
-<p>
-  Moving the light or rotating the camera will show how the reflected highlight moves on the wooden surface, as can be seen in the images on this page. The keyboard button 'w' will toggle between the wood shading model and a simple Phong shading model. By default, it is set to the wooden shading model for the wooden object. The Phong shader is also used for the floor and walls.
-</p>
+<br />
+
+<h2> Shader Code </h2>
 
 <p>
-  At this stage in the project, the BRDF has been coded into the wood shaders (wood.frag & wood.vert). The main file for the BRDF is in wood.frag. It is based on the shader that produced the final images in the paper, linked above.
-</p>
-
-<p>
-  All the shader code matches what has been presented in Section 4 of the paper, the "Shading Model for Wood." This specifically applies to finished wood, where light refracts and reflects off the coated surface and inside of the surface as well. Those two pieces (surface & sub-surface) are the fundamental components of the BRDF.
-</p>
-
-<img src="img/wood1.png" />
-
-<p>
-  Interestingly, the implementation of the shader used for the rendered images in the paper was "wrong." I emailed the first author on the paper (Dr. Marschner at Cornell University), and pointed out an error in a piece of code they had used for the normalized Gaussian distribution. He stated in his email that the only real resulting difference was a change in one of the other variables for generating the highlighted surface, but nonetheless, I have fixed this normalized Gaussian distribution in my shader implementation.
+  The BRDF has been coded into the wood shaders (wood.frag & wood.vert). The main code for the BRDF is in wood.frag. It is based on the Renderman shader that the original authors used to produce <a href="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html"> their final images</a>. The bulk of this project was understanding the Renderman code and writing the same shader from scratch in GLSL.
 </p>
 
 <p>
-  The final project will add more interaction with the BRDF and render a more realistic piece of wood. I will have several more features added to the GUI, to be able to adjust several variables used in the wood shading BRDF model. Textures will be added to the wood to better simulate real wood. I would like to also implement automatic detection from a texture for the fiber direction and several other BRDF variables, all from textures. This will add to the realism that the original authors achieved, since it would use their same data that was published online. Additionally, the wood will automatically show the moving highlight, as if the wooden slab was on a rotating platform or the camera was rotating about the scene. Lastly, I think there is a need to make the cone-shaped highlights really pop out, so adding noise or bump-mapping to the thin slab of wood will also be attempted.
+  All the shader code matches the equations presented in Section 4 of their paper, the "Shading Model for Wood." This method specifically applies to the sub-surface reflection of finished wood, where light refracts and reflects off the internal wood fibers. The surface reflection, like in the original paper, has been implemented using a simple Phong model. Together, these two pieces (surface & sub-surface reflection) are the fundamental components of the BRDF.
 </p>
+
+<p>
+  Writing the shader code for the sub-surface reflection proved to be quite the challenge. Unlike other more robust shader languages, GLSL requires more manual work. For example, the fresnel function exists in the Renderman language, but that is not the case for GLSL. Reading a white paper by Nvidia, referenced within the code, the fresnel function was implemented, at least up until the fresnel factor. Then, the GLSL method refract() was used to alter the light rays (or vectors) accordingly. It took a lot of debugging and testing to get just the fresnel function working correctly. Lastly, a good deal of comments were sprinkled throughout the code to both aid myself in writing the shader to make sure all components were done in their proper order, and also for hopefully future use when I publish this code online.
+</p>
+
+<p>
+  Interestingly, the implementation of the shader used by the original authors for the rendered images in the paper was "wrong." I emailed the first author on the paper (Dr. Marschner at Cornell University), and pointed out an error in a piece of code they had used for the normalized Gaussian distribution. He stated in his email that the only real, resulting difference was a change in one of the other variables for generating the highlighted surface, but nonetheless, I have fixed this normalized Gaussian distribution in my shader implementation. I was not exactly sure which variable he said it would need to change, but that could explain some differences in the renders generated from my program.
+</p>
+
+<br />
+
+<h2> Interface </h2>
+
+<p>
+  The GUI is the basic window and environment used in all other assignments for this course. The object is a simple, thin "slab" of wood. The object can be moved, deactivated, and textures can be changed. There is a choice between any (or all) of the following wood types: maple, padauk, walnut1, and walnut2. These textures and input data come straight from the original authors' published data. By default, the wooden slab rotates about the scene, but this can be toggled off as well.
+</p>
+
+<p>
+  The light and camera can both be moved as in previous assignments. Moving the light or rotating the camera will show how the sub-surface reflected highlight moves on the wooden surface, as can be seen in the images on this page. The keyboard button 'w' will toggle the wood shading model and textures off and on. A regular Phong shader is used for the rest of the scene and to mimic a surface reflection highlight on the wood as well, as the original authors also did.
+</p>
+
+<p>
+  Additionally, several key variables using in the BRDF have been added as adjustable variables in the GUI. First, the index of refraction, can adjust the angle of refracation caused by the light traveling through the wood sub-surface, default set to 1.5. Interestingly, this variable does not have a large change in the actual render output (from afar). The width of the sub-surface highlight can also be adjusted, which very obviously gets smaller or larger with the size of that variable. Lastly, the specular roughness is one of the factors used for the Gaussian distribution, so light gets more spread out along the surface as this value increases (though the change is not too large).
+</p>
+
+<br />
+
+<h2> Future Work </h2>
+
+<p>
+  There are several more steps that would have been nice to complete, given more time. One thing that proved to be quite difficult was emulating the rendered images from the original papers. The fact is, this requires basically copying the same lighting parameters, shader code, etc. that would make this near impossible to fully achieve. Some of these features could have been better simulated by adjusting lighting and color material parameters for similar blending, but, since the authors used Renderman for their rendered images, it was the best that could be done in reasonable time using OpenGL. Going beyond even the work in the original paper, the actual surface reflection highlight could have been more appropriately modeled into the BRDF. Lastly, it would have been neat to compare rendered images of wood to other real images of wood in a similar environment, again in an attempt to validate the efficacy of the realism of this BRDF model. This would not have been as exact or precise as the measurements presented by the original authors. Instead, it would have been more of a proof-of-concept validation.
+</p>
+
+<br />
+
+<h2> References </h2>
+
+<p> <strong> <a href="http://www.cs.cornell.edu/~srm/publications/SG05-wood.html">
+  Measuring and Modeling the Appearance of Finished Wood
+</p> </strong> </a> <p> <small>
+  <em> Stephen R. Marschner, Stephen H. Westin, Adam Arbree, and Jonathan T. Moon </em>
+</p> <p>
+  in Proceedings of <em> SIGGRAPH 2005 </em>
+</p> <p>
+  held in Los Angeles, California, July 2005
+</p> </small>
 
 </body>
 </html>
