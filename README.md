@@ -9,7 +9,7 @@ This work is based on the [original paper](http://www.cs.cornell.edu/~srm/public
 Shader Code
 -----------
 
-The BRDF has been coded into the wood shaders ( [wood-shader/wood.frag](/wood-shader/wood.frag) & [wood-shader/wood.vert](/wood-shader/wood.vert) ). The main code for the BRDF is in *wood.frag*. It is based on the Renderman shader that the original authors used to produce their final images. The bulk of this project was understanding the Renderman code and writing the same shader from scratch in GLSL.
+The BRDF has been coded into the wood shaders ( [wood-shader/wood.frag](/wood-shader/wood.frag) & [wood-shader/wood.vert](/wood-shader/wood.vert) ). The main code for the BRDF is in [wood.frag](/wood-shader/wood.frag). It is based on the Renderman shader that the original authors used to produce their final images. The bulk of this project was understanding the Renderman code and writing the same shader from scratch in GLSL.
 
 All the shader code matches the equations presented in **Section 4** of their paper, the *Shading Model for Wood*. This method specifically applies to the sub-surface reflection of finished wood, where light refracts and reflects off the internal wood fibers. The surface reflection, like in the original paper, has been implemented using a simple Phong model. Together, these two pieces (surface & sub-surface reflection) are the fundamental components of the BRDF.
 
@@ -27,9 +27,20 @@ The GUI is the basic window and environment provided from a GLUT and GLUI tutori
 
 ![wood shader gui](/writeup/gui.png)
 
-The light and camera can both be moved to see the interactions with the object. Moving the light or rotating the camera will show how the sub-surface reflected highlight moves on the wooden surface, as can be seen in the images on this page. The keyboard button 'w' will toggle the wood shading model and textures off and on. A regular Phong shader is used to mimic a surface reflection highlight on the wood as well, as the original authors also did.
+The light and camera can both be moved to see the interactions with the object. Moving the light or rotating the camera will show how the sub-surface reflected highlight moves on the wooden surface, as can be seen in the images on this page. A regular Phong shader is used to mimic a surface reflection highlight on the wood as well, as the original authors also did.
 
 Additionally, several key variables in the BRDF have been added as adjustable variables in the GUI. First, the index of refraction can be adjusted, changing how the light travels through the wood sub-surface. Interestingly, this variable does not have a large change in the actual render output (from afar). The width of the sub-surface highlight can also be adjusted, which very obviously gets smaller or larger with the size of that variable. Lastly, the specular roughness is one of the factors used for the Gaussian distribution, so light gets more spread out along the surface as this value increases (though the change is not too large).
+
+
+Compiling & Running Code
+------------------------
+
+for Linux, you can use the provided bash script
+>  cd **wood-shader**
+
+>  ./run **wood**
+
+otherwise, use your operating system's standard C and OpenGL pipeline to run the code
 
 
 References
